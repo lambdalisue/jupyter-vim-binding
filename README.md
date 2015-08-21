@@ -13,7 +13,7 @@ Thus you can install the plugin with the following code in your notebook.
 
 ```python
 from notebook.nbextensions import install_nbextension
-install_nbextension('https://goo.gl/5TK96v', user=True)
+install_nbextension('https://goo.gl/5TK96v', user=True, destination="vim_binding.js")
 # Or if you prefre a full URL
 #install_nbextension('https://rawgithub.com/lambdalisue/jupyter-vim-binding/master/nbextensions/vim_binding.js', user=True)
 ```
