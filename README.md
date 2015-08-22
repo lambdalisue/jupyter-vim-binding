@@ -2,6 +2,8 @@ jupyter-vim-binding
 ========================
 Enable Vim key bindings in [jupyter](https://jupyter.org/) or [IPython notebook](http://ipython.org/notebook.html).
 
+![Screencast](http://recordit.co/62sg2aC9cZ.gif)
+
 This is a [jupyter](https://jupyter.org/) plugin to enable Vim key bindings in jupyter or IPython (4.0).
 While the development of [ivanov/ipython-vimception](https://github.com/ivanov/ipython-vimception) seemed be stopped, I decide to create a new one.
 
