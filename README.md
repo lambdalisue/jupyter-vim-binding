@@ -36,7 +36,7 @@ Call the following in your notebook to enable Vim bindings permanently.
 ```javascript
 %%javascript
 Jupyter.notebook.config.update({
-  'load_extensions': { 'vim_binding': True },
+  'load_extensions': { 'vim_binding': true },
 });
 ```
 
