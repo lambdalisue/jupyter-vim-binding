@@ -17,7 +17,7 @@
  */
 "use strict";
 
-define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
+define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], function(namespace, cell) {
   var extend = function(destination, source) {
     for (var property in source) {
       if (source.hasOwnProperty(property)) {
@@ -31,36 +31,28 @@ define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
   };
   var leaveInsertOrNormal = function(cm) {
     if (cm.state.vim.insertMode || cm.state.vim.visualMode) {
-      leaveInsert(cm);
+      CodeMirror.Vim.handleKey(cm, '<Esc>');
     } else {
-      Jupyter.notebook.command_mode();
-      Jupyter.notebook.focus_cell();
+      namespace.notebook.command_mode();
+      namespace.notebook.focus_cell();
     }
-  };
-  var isAtBoundaryTop = function(cm) {
-    var cursor = cm.getCursor();
-    return cursor.line === 0 && cm.findPosV(cursor, -1, 'line').hitSide;
-  };
-  var isAtBoundaryBottom = function(cm) {
-    var cursor = cm.getCursor();
-    return cursor.line === (cm.lineCount() - 1) && cm.findPosV(cursor, 1, 'line').hitSide;
   };
 
   // Override save method of CodeMirror to save a checkpoint
   CodeMirror.prototype.save = function() {
-    Jupyter.notebook.save_checkpoint();
+    namespace.notebook.save_checkpoint();
   };
 
   // Override default config of CodeMirror to enable Vim binding
-  var options = Jupyter.Cell.options_default;
+  var options = cell.Cell.options_default;
   options.cm_config.keyMap = 'vim';
   options.cm_config.extraKeys = extend(options.cm_config.extraKeys || {}, {
-    'Esc': leaveInsertOrNormal
+    'Esc': leaveInsertOrNormal,
   });
 
   // Override 'bind_events' to ensure 'Normal' mode on blur
-  var original_bind_events = Jupyter.Cell.prototype.bind_events;
-  Jupyter.Cell.prototype.bind_events = function() {
+  var original_bind_events = cell.Cell.prototype.bind_events;
+  cell.Cell.prototype.bind_events = function() {
     original_bind_events.apply(this);
     if (this.code_mirror) {
       this.code_mirror.on('blur', leaveInsert);
@@ -68,41 +60,7 @@ define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
   };
 
   // Register custom actions
-  var km = Jupyter.keyboard_manager;
-  km.actions.register({
-    'help': 'move cursor up or previous cell',
-    'help_index': 'zz',
-    'handler': function(env, e) {
-      var cell = env.notebook.get_selected_cell();
-      var cm = typeof cell === 'undefined' ? undefined : cell.code_mirror;
-      if (cm && isAtBoundaryTop(cm)) {
-        e.preventDefault();
-        env.notebook.command_mode();
-        env.notebook.select_prev();
-        env.notebook.edit_mode();
-      } else {
-        CodeMirror.Vim.handleKey(cm, 'k');
-      }
-      return false;
-    }
-  }, 'move_cursor_up_or_previous_cell', 'vim_binding');
-  km.actions.register({
-    'help': 'move cursor down or next cell',
-    'help_index': 'zz',
-    'handler': function(env, e) {
-      var cell = env.notebook.get_selected_cell();
-      var cm = typeof cell === 'undefined' ? undefined : cell.code_mirror;
-      if (cm && isAtBoundaryBottom(cm)) {
-        e.preventDefault();
-        env.notebook.command_mode();
-        env.notebook.select_next();
-        env.notebook.edit_mode();
-      } else {
-        CodeMirror.Vim.handleKey(cm, 'j');
-      }
-      return false;
-    }
-  }, 'move_cursor_down_or_next_cell', 'vim_binding');
+  var km = namespace.keyboard_manager;
   km.actions.register({
     'help': 'focus the first cell',
     'help_index': 'zz',
@@ -130,8 +88,8 @@ define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
   km.edit_shortcuts.clear_shortcuts();
   km.edit_shortcuts.add_shortcut('ctrl-shift--', 'ipython.split-cell-at-cursor');
   km.edit_shortcuts.add_shortcut('ctrl-shift-subtract', 'ipython.split-cell-at-cursor');
-  km.edit_shortcuts.add_shortcut('ctrl-j', 'vim_binding.move_cursor_down_or_next_cell');
-  km.edit_shortcuts.add_shortcut('ctrl-k', 'vim_binding.move_cursor_up_or_previous_cell');
+  km.edit_shortcuts.add_shortcut('ctrl-j', 'ipython.select-next-cell');
+  km.edit_shortcuts.add_shortcut('ctrl-k', 'ipython.select-previous-cell');
   km.edit_shortcuts.add_shortcut('alt-enter', 'ipython.execute-and-insert-after');
   km.edit_shortcuts.add_shortcut('ctrl-enter', 'ipython.execute-in-place');
   km.edit_shortcuts.add_shortcut('shift-enter', 'ipython.run-select-next');
@@ -160,6 +118,8 @@ define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
   km.command_shortcuts.add_shortcut('i', 'ipython.enter-edit-mode');
   km.command_shortcuts.add_shortcut('j', 'ipython.select-next-cell');
   km.command_shortcuts.add_shortcut('k', 'ipython.select-previous-cell');
+  km.command_shortcuts.add_shortcut('ctrl-j', 'ipython.select-next-cell');
+  km.command_shortcuts.add_shortcut('ctrl-k', 'ipython.select-previous-cell');
   km.command_shortcuts.add_shortcut('shift-j', 'ipython.extend-selection-next');
   km.command_shortcuts.add_shortcut('shift-k', 'ipython.extend-selection-previous');
   km.command_shortcuts.add_shortcut('shift-m', 'ipython.merge-selected-cells');
@@ -180,7 +140,7 @@ define(['base/js/namespace', 'codemirror/keymap/vim'], function(Jupyter) {
   var exports = {
     'load_ipython_extension': function() {
       // apply options and events on existing CodeMirror instances
-      Jupyter.notebook.get_cells().map(function(cell) {
+      namespace.notebook.get_cells().map(function(cell) {
         var cm = cell.code_mirror;
         if (cm) {
           cm.setOption('keyMap', 'vim');
