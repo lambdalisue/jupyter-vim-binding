@@ -98,14 +98,6 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
 
   km.command_shortcuts.clear_shortcuts();
   km.command_shortcuts.add_shortcut('ctrl-c', 'ipython.interrupt-kernel');
-  km.command_shortcuts.add_shortcut('0,0', 'ipython.restart-kernel');
-  km.command_shortcuts.add_shortcut('1', 'ipython.change-selected-cell-to-heading-1');
-  km.command_shortcuts.add_shortcut('2', 'ipython.change-selected-cell-to-heading-2');
-  km.command_shortcuts.add_shortcut('3', 'ipython.change-selected-cell-to-heading-3');
-  km.command_shortcuts.add_shortcut('4', 'ipython.change-selected-cell-to-heading-4');
-  km.command_shortcuts.add_shortcut('5', 'ipython.change-selected-cell-to-heading-5');
-  km.command_shortcuts.add_shortcut('6', 'ipython.change-selected-cell-to-heading-6');
-  km.command_shortcuts.add_shortcut('6', 'ipython.change-selected-cell-to-heading-6');
   km.command_shortcuts.add_shortcut('shift-o', 'ipython.insert-cell-before');
   km.command_shortcuts.add_shortcut('o', 'ipython.insert-cell-after');
   km.command_shortcuts.add_shortcut('y,y', 'ipython.copy-selected-cell');
@@ -136,6 +128,18 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
   km.command_shortcuts.add_shortcut('shift-v', 'ipython.toggle-output-visibility-selected-cell');
   km.command_shortcuts.add_shortcut('shift-s', 'ipython.toggle-output-scrolling-selected-cell');
   km.command_shortcuts.add_shortcut('ctrl-s', 'ipython.save-notebook');
+
+  // Keys defined to 'command_shortcuts' would steal pressed keys in CodeMirror's Vim command mode
+  // Thus the following shortcuts, which is not often used, are not defined even it is defined in
+  // normal IPython/Jupyter.
+  // See https://github.com/lambdalisue/jupyter-vim-binding/issues/2
+  //km.command_shortcuts.add_shortcut('0,0', 'ipython.restart-kernel');
+  //km.command_shortcuts.add_shortcut('1', 'ipython.change-selected-cell-to-heading-1');
+  //km.command_shortcuts.add_shortcut('2', 'ipython.change-selected-cell-to-heading-2');
+  //km.command_shortcuts.add_shortcut('3', 'ipython.change-selected-cell-to-heading-3');
+  //km.command_shortcuts.add_shortcut('4', 'ipython.change-selected-cell-to-heading-4');
+  //km.command_shortcuts.add_shortcut('5', 'ipython.change-selected-cell-to-heading-5');
+  //km.command_shortcuts.add_shortcut('6', 'ipython.change-selected-cell-to-heading-6');
 
   var exports = {
     'load_ipython_extension': function() {
