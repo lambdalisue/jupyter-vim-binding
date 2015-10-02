@@ -37,6 +37,9 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
       namespace.notebook.focus_cell();
     }
   };
+  var insertSoftTab = function(cm) {
+    cm.execCommand('insertSoftTab');
+  }
 
   // Override save method of CodeMirror to save a checkpoint
   CodeMirror.prototype.save = function() {
@@ -48,6 +51,7 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
   options.cm_config.keyMap = 'vim';
   options.cm_config.extraKeys = extend(options.cm_config.extraKeys || {}, {
     'Esc': leaveInsertOrNormal,
+    'Tab': insertSoftTab,
   });
 
   // Override 'bind_events' to ensure 'Normal' mode on blur
@@ -148,7 +152,10 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
         var cm = cell.code_mirror;
         if (cm) {
           cm.setOption('keyMap', 'vim');
-          cm.setOption('extraKeys', { 'Esc': leaveInsertOrNormal });
+          cm.setOption('extraKeys', {
+            'Esc': leaveInsertOrNormal,
+            'Tab': insertSoftTab,
+          });
           cm.on('blur', leaveInsert);
         }
       });
