@@ -132,6 +132,9 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
   km.command_shortcuts.add_shortcut('shift-v', 'ipython.toggle-output-visibility-selected-cell');
   km.command_shortcuts.add_shortcut('shift-s', 'ipython.toggle-output-scrolling-selected-cell');
   km.command_shortcuts.add_shortcut('ctrl-s', 'ipython.save-notebook');
+  km.command_shortcuts.add_shortcut('alt-enter', 'ipython.execute-and-insert-after');
+  km.command_shortcuts.add_shortcut('ctrl-enter', 'ipython.execute-in-place');
+  km.command_shortcuts.add_shortcut('shift-enter', 'ipython.run-select-next');
 
   // Keys defined to 'command_shortcuts' would steal pressed keys in CodeMirror's Vim command mode
   // Thus the following shortcuts, which is not often used, are not defined even it is defined in
@@ -147,15 +150,13 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
 
   var exports = {
     'load_ipython_extension': function() {
+      var options = cell.Cell.options_default;
       // apply options and events on existing CodeMirror instances
       namespace.notebook.get_cells().map(function(cell) {
         var cm = cell.code_mirror;
         if (cm) {
-          cm.setOption('keyMap', 'vim');
-          cm.setOption('extraKeys', {
-            'Esc': leaveInsertOrNormal,
-            'Tab': insertSoftTab,
-          });
+          cm.setOption('keyMap', options.cm_config.keyMap);
+          cm.setOption('extraKeys', options.cm_config.extraKeys);
           cm.on('blur', leaveInsert);
         }
       });
