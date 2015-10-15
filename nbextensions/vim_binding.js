@@ -160,7 +160,10 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
           cm.on('blur', leaveInsert);
         }
       });
-    }
+    },
+    'leaveInsert': leaveInsert,
+    'leaveInsertOrNormal': leaveInsertOrNormal,
+    'insertSoftTab': insertSoftTab,
   };
   return exports;
 });
