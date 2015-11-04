@@ -12,17 +12,23 @@ There are two ways to install the extension: 1. Directly as a notebook extension
 
 ## Direct
 ### Get the file
-Clone the repository in Jupyter's data directory by running the following from a shell (e.g., bash)
+[Recommended] Clone the repository in Jupyter's data directory by running the following from a shell (e.g., bash)
 ```bash
 > cd $(jupyter --data-dir)/nbextensions
 > git clone https://github.com/lambdalisue/jupyter-vim-binding.git vim_binding
 ```
-or if you want to use [Notebook Extensions](http://mindtrove.info/#nb-extensions), run the following from a Python shell or a Notebook
+
+*Or*, if you want to use Python interface for [Notebook Extensions](http://mindtrove.info/#nb-extensions), run the following from a Python shell or a Notebook
 ```python
 from notebook.nbextensions import install_nbextension
 from jupyter_core.paths import jupyter_data_dir
 install_nbextension('https://rawgithub.com/lambdalisue/jupyter-vim-binding/master/vim_binding.js',
                      nbextensions_dir=jupyter_data_dir()+'/nbextensions/vim_binding')
+```
+
+*Or*, from a shell
+```bash
+jupyter nbextension install https://rawgithub.com/lambdalisue/jupyter-vim-binding/master/vim_binding.js --nbextensions=$(jupyter --data-dir)/nbextensions/vim_binding
 ```
 On Linux machines, either command should create a new file under
 `~/.local/share/jupyter/nbextensions/vim_binding/vim_binding.js`. 
@@ -38,12 +44,17 @@ Jupyter.utils.load_extensions('vim_binding/vim_binding')
 ```
 
 ### Activate permanently
-To activate the extension permanently, run the following in a code cell:
+To activate the extension permanently from a notebook, run the following in a code cell:
 ```javascript
 %%javascript
 Jupyter.notebook.config.update({
   'load_extensions': { 'vim_binding': true },
 });
+```
+
+*Or*, from a shell
+```bash
+jupyter nbextension enable vim_binding/vim_binding
 ```
 
 ## Extending IPython-notebook-extensions
