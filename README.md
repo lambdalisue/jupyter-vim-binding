@@ -1,6 +1,6 @@
-#Jupyter VIM Binding
+#jupyter-vim-binding
 
-This extension enables VIM keybindings in [Jupyter Notebook](https://jupyter.org/) (4.0+).
+This extension enables VIM keybindings in [Jupyter Notebook](https://jupyter.org/) (4.0+), formerly known as [IPython Notebook](http://ipython.org/notebook.html).
 
 ![Screencast](http://recordit.co/62sg2aC9cZ.gif)
 
