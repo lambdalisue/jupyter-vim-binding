@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Name: VIM binding
+Description: Adds VIM keyboard binding for Jupyter notebooks.
+Link: README.md
+Main: vim_binding.js
+Compatibility: 4.x
