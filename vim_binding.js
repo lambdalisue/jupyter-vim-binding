@@ -52,6 +52,7 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
   options.cm_config.extraKeys = extend(options.cm_config.extraKeys || {}, {
     'Esc': leaveInsertOrNormal,
     'Tab': insertSoftTab,
+    'Ctrl-C': false,
   });
 
   // Override 'bind_events' to ensure 'Normal' mode on blur
