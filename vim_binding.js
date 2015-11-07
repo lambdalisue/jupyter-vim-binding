@@ -100,6 +100,9 @@ define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], funct
   km.edit_shortcuts.add_shortcut('shift-enter', 'ipython.run-select-next');
   km.edit_shortcuts.add_shortcut('shift', 'ipython.ignore');
   km.edit_shortcuts.add_shortcut('ctrl-s', 'ipython.save-notebook');
+  km.edit_shortcuts.add_shortcut('ctrl-1', 'ipython.change-selected-cell-to-code-cell');
+  km.edit_shortcuts.add_shortcut('ctrl-2', 'ipython.change-selected-cell-to-markdown-cell');
+  km.edit_shortcuts.add_shortcut('ctrl-3', 'ipython.change-selected-cell-to-raw-cell');
 
   km.command_shortcuts.clear_shortcuts();
   km.command_shortcuts.add_shortcut('ctrl-c', 'ipython.interrupt-kernel');
