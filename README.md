@@ -57,6 +57,27 @@ Jupyter.notebook.config.update({
 jupyter nbextension enable vim_binding/vim_binding
 ```
 
+## Custimization
+If you want to remap `<Esc>` to `jk`, we can insert the line ``CodeMirror.Vim.map("jk","<Esc>","insert")`` in `vim_binding.js` within the main function. For example,
+
+```javascript
+define(['base/js/namespace', 'notebook/js/cell', 'codemirror/keymap/vim'], function(namespace, cell) {
+  CodeMirror.Vim.map("jk","<Esc>","insert") // remap <Esc> to `jk`
+  var extend = function(destination, source) {
+    for (var property in source) {
+      if (source.hasOwnProperty(property)) {
+        destination[property] = source[property];
+      }
+    }
+    return destination;
+  };
+  // rest of file ...
+```
+
+This maps any key to any key; for example, you can include the line ``CodeMirror.Vim.map("H","^","normal")`` to bind `H` to go to the beginning of the line in normal mode. See [issue #8] for more detail.
+
+[issue #8]:https://github.com/lambdalisue/jupyter-vim-binding/issues/8
+
 ## Extending IPython-notebook-extensions
 [IPython-notebook-extensions](https://github.com/ipython-contrib/IPython-notebook-extensions) "*contains a collection of extensions that add functionality to the Jupyter notebook. These extensions are mostly written in Javascript and will be loaded locally in your Browser*". 
 
