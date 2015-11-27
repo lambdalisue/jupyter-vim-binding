@@ -106,7 +106,7 @@ define([
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
-  if (common_shortcuts.shift || '' === 'jupyter-notebook:ignore') {
+  if ((common_shortcuts.shift || '') === 'jupyter-notebook:ignore') {
     km.edit_shortcuts.clear_shortcuts();
     km.edit_shortcuts.add_shortcut('ctrl-shift--', 'jupyter-notebook:split-cell-at-cursor');
     km.edit_shortcuts.add_shortcut('ctrl-shift-subtract', 'jupyter-notebook:split-cell-at-cursor');
