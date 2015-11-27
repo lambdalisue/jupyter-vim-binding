@@ -57,17 +57,6 @@ define([
   CodeMirror.Vim.Jupyter.insertSoftTab = function(cm) {
     cm.execCommand('insertSoftTab');
   };
-  CodeMirror.Vim.Jupyter.init = function() {
-    var config = cell.Cell.options_default.cm_config;
-    config.keyMap = 'vim';
-    config.extraKeys = extend(config.extraKeys || {}, {
-      'Esc': CodeMirror.Vim.Jupyter.leaveInsertOrNormalMode,
-      'Tab': CodeMirror.Vim.Jupyter.insertSoftTab,
-      'Ctrl-C': false,  // To enable clipboard copy
-    });
-  };
-  // Initialize
-  CodeMirror.Vim.Jupyter.init();
 
   // Extend Jupyter
   var original = {};
@@ -235,13 +224,21 @@ define([
 
   var exports = {
     'load_ipython_extension': function() {
+      // Initialize
+      var cm_config = cell.Cell.options_default.cm_config;
+      cm_config.keyMap = 'vim';
+      cm_config.extraKeys = extend(cm_config.extraKeys || {}, {
+        'Esc': CodeMirror.Vim.Jupyter.leaveInsertOrNormalMode,
+        'Tab': CodeMirror.Vim.Jupyter.insertSoftTab,
+        'Ctrl-C': false,  // To enable clipboard copy
+      });
+
       // Apply default CodeMirror config to existing CodeMirror instances
-      var config = cell.Cell.options_default.cm_config;
       namespace.notebook.get_cells().map(function(cell) {
         var cm = cell.code_mirror;
         if (cm) {
-          cm.setOption('keyMap', config.keyMap);
-          cm.setOption('extraKeys', config.extraKeys);
+          cm.setOption('keyMap', cm_config.keyMap);
+          cm.setOption('extraKeys', cm_config.extraKeys);
         }
       });
     },
