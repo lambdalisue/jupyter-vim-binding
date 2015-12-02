@@ -13,7 +13,7 @@ There are two ways to install the extension: 1. Directly as a notebook extension
 
 ## Direct
 ### Get the file
-*Recommended* Clone the repository in Jupyter's data directory by running the following from a shell (e.g., bash)
+(*Recommended*) Clone the repository in Jupyter's data directory by running the following from a shell (e.g., bash)
 
 ```bash
 > cd $(jupyter --data-dir)/nbextensions
@@ -89,12 +89,21 @@ To customize your Vim in Jupyter.
 Create a [`custom.js`](http://jdfreder-notebook.readthedocs.org/en/docs/examples/Notebook/JavaScript%20Notebook%20Extensions.html) (usually at `~/.jupyter/custom/custom.js`) and use [CodeMirror's Vim API](https://codemirror.net/doc/manual.html#vimapi) to configure like below:
 
 ```javascript
+// Configure CodeMirror
 require(['codemirror/keymap/vim'], function() {
   // Map jj to <Esc>
   CodeMirror.Vim.map("jj", "<Esc>", "insert");
   // Use gj/gk instead of j/k
   CodeMirror.Vim.map("j", "gj", "normal");
   CodeMirror.Vim.map("k", "gk", "normal");
+});
+// Configure Jupyter (VimBinding)
+require(['base/js/namespace'], function(namespace) {
+  namespace.VimBinding = namespace.VimBinding || {};
+  // Regulate scroll speed (default: 30)
+  namespace.VimBinding.scrollUnit = 100;
+  // Regulate offset (default: 30)
+  namespace.VimBinding.closestCellMargin = 5;
 });
 ```
 
@@ -103,9 +112,13 @@ require(['codemirror/keymap/vim'], function() {
 Create a your `custom.css` (usually at `~/.jupyter/custom/custom.css`) and configure the insert background like below:
 
 ```css
+/*  Jupyter cell is in normal mode when code mirror */
+.edit_mode .cm-s-ipython.CodeMirror-focused {
+    background-color: #DDEDEF;
+}
 /*  Jupyter cell is in insert mode when code mirror */
 .edit_mode .cm-s-ipython.CodeMirror-focused:not(.cm-fat-cursor) {
-    background-color: #EFDDAD;
+    background-color: #EFEFAE;
 }
 ```
 

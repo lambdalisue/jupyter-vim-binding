@@ -34,6 +34,17 @@ define([
   };
 
   //
+  // Configure
+  //
+  var defaultConfig = {};
+  defaultConfig.scrollUnit = 30;
+  defaultConfig.closestCellMargin = 30;
+  namespace.VimBinding = extend({
+      'scrollUnit': defaultConfig.scrollUnit,
+      'closestCellMargin': defaultConfig.closestCellMargin
+  }, namespace.VimBinding || {});
+
+  //
   // Extend CodeMirror
   //
   CodeMirror.prototype.save = function() {
@@ -78,34 +89,34 @@ define([
     }
     original.handle_edit_mode.call(this, cell);
   };
-  notebook.Notebook.prototype.select_closest_cell = function(way) {
+  notebook.Notebook.prototype.select_closest_cell = function(direction) {
+      var margin = namespace.VimBinding.closestCellMargin || defaultConfig.closestCellMargin;
       var site = document.querySelector('#site');
       var elems = this.get_cell_elements();
       var index = this.get_selected_index();
       var viewport = {
         'top': site.scrollTop,
-        'bottom': site.scrollTop + (site.clientHeight - site.offsetTop),
+        'bottom': site.scrollTop + (site.clientHeight - site.offsetTop)
       };
       var box = {
         'top': elems[index].offsetTop,
-        'bottom': elems[index].offsetTop + elems[index].clientHeight,
+        'bottom': elems[index].offsetTop + elems[index].clientHeight
       };
-      if (box.top < viewport.top && way !== 'up') {
+      if (box.bottom - margin < viewport.top && direction !== 'up') {
         for (var i=index; i<elems.length; i++) {
-          if (elems[i].offsetTop - site.offsetTop >= viewport.top) {
-            index = i;
-            break;
+          if (elems[i].offsetTop >= viewport.top) {
+            this.select(i);
+            return;
           }
         }
-      } else if(box.bottom > viewport.bottom && way !== 'down') {
+      } else if(box.top + margin > viewport.bottom && direction !== 'down') {
         for (var i=index; i>=0; i--) {
-          if (elems[i].offsetTop + elems[i].clientHeight - site.offsetTop < viewport.bottom) {
-            index = i;
-            break;
+          if (elems[i].offsetTop + elems[i].clientHeight < viewport.bottom) {
+            this.select(i);
+            return;
           }
         }
       }
-      this.select(index);
   };
   // Register custom actions
   var km = namespace.keyboard_manager;
@@ -136,7 +147,7 @@ define([
     'help_index': 'zz',
     'handler': function(env) {
       // scroll down
-      var scrollUnit = 30;
+      var scrollUnit = namespace.VimBinding.scrollUnit || defaultConfig.scrollUnit;
       var site = document.querySelector('#site');
       var prev = site.scrollTop;
       site.scrollTop += scrollUnit;
@@ -152,7 +163,7 @@ define([
     'help': 'scroll up',
     'help_index': 'zz',
     'handler': function(env) {
-      var scrollUnit = 30;
+      var scrollUnit = namespace.VimBinding.scrollUnit || defaultConfig.scrollUnit;
       var site = document.querySelector('#site');
       var prev = site.scrollTop;
       site.scrollTop -= scrollUnit;
