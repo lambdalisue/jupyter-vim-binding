@@ -78,7 +78,7 @@ define([
     }
     original.handle_edit_mode.call(this, cell);
   };
-  notebook.Notebook.prototype.select_closest_cell = function() {
+  notebook.Notebook.prototype.select_closest_cell = function(way) {
       var site = document.querySelector('#site');
       var elems = this.get_cell_elements();
       var index = this.get_selected_index();
@@ -90,14 +90,14 @@ define([
         'top': elems[index].offsetTop,
         'bottom': elems[index].offsetTop + elems[index].clientHeight,
       };
-      if (box.top < viewport.top) {
+      if (box.top < viewport.top && way !== 'up') {
         for (var i=index; i<elems.length; i++) {
           if (elems[i].offsetTop - site.offsetTop >= viewport.top) {
             index = i;
             break;
           }
         }
-      } else if(box.bottom > viewport.bottom) {
+      } else if(box.bottom > viewport.bottom && way !== 'down') {
         for (var i=index; i>=0; i--) {
           if (elems[i].offsetTop + elems[i].clientHeight - site.offsetTop < viewport.bottom) {
             index = i;
@@ -143,7 +143,7 @@ define([
       if (prev === site.scrollTop) {
         env.notebook.select_next();
       } else {
-        env.notebook.select_closest_cell();
+        env.notebook.select_closest_cell('down');
       }
       return false
     }
@@ -159,7 +159,7 @@ define([
       if (prev === site.scrollTop) {
         env.notebook.select_prev();
       } else {
-        env.notebook.select_closest_cell();
+        env.notebook.select_closest_cell('up');
       }
       return false;
     }
