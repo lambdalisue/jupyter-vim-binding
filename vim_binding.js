@@ -241,8 +241,8 @@ define([
     km.command_shortcuts.add_shortcut('ctrl-3', 'jupyter-notebook:change-cell-to-raw');
     km.command_shortcuts.add_shortcut('shift-h', 'jupyter-notebook:show-keyboard-shortcuts');
     km.command_shortcuts.add_shortcut('shift-l', 'jupyter-notebook:toggle-cell-line-numbers');
-    km.command_shortcuts.add_shortcut('shift-v', 'jupyter-notebook:toggle-cell-output-visibility');
-    km.command_shortcuts.add_shortcut('shift-s', 'jupyter-notebook:toggle-cell-output-scrolling');
+    km.command_shortcuts.add_shortcut('shift-v', 'jupyter-notebook:toggle-cell-output-collapsed');
+    km.command_shortcuts.add_shortcut('shift-s', 'jupyter-notebook:toggle-cell-output-scrolled');
     km.command_shortcuts.add_shortcut('ctrl-s', 'jupyter-notebook:save-notebook');
     km.command_shortcuts.add_shortcut('alt-enter', 'jupyter-notebook:run-cell-and-insert-below');
     km.command_shortcuts.add_shortcut('ctrl-enter', 'jupyter-notebook:run-cell');
