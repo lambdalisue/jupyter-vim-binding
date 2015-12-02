@@ -224,6 +224,19 @@ define([
     }
   }, 'scroll-up', 'vim-binding');
 
+  km.actions.register({
+    'help': 'select all',
+    'help_index': 'zz',
+    'handler': function(env) {
+      var selected_cell = env.notebook.get_selected_cell();
+      if(typeof selected_cell !== "undefined"){
+        var cm = selected_cell.code_mirror;
+        var lastLine = cm.lastLine();
+        cm.setSelection({line: 0, ch: 0}, {line: lastLine, ch: cm.lineInfo(lastLine).text.length});
+      }
+    }
+  }, 'select-all-in-current-cell', 'vim-binding');
+
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
   if ((common_shortcuts.shift || '') === 'jupyter-notebook:ignore') {
@@ -231,6 +244,7 @@ define([
     replace_shortcuts('edit', {
     	'ctrl-shift--': 'jupyter-notebook:split-cell-at-cursor',
     	'ctrl-shift-subtract': 'jupyter-notebook:split-cell-at-cursor',
+    	'ctrl-a': 'vim-binding:select-all-in-current-cell',
     	'ctrl-j': 'vim-binding:select-next-cell-and-edit',
     	'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
     	'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
@@ -259,6 +273,7 @@ define([
     	'k': 'vim-binding:scroll-up',
     	'z,z': 'jupyter-notebook:scroll-cell-center',
     	'z,t': 'jupyter-notebook:scroll-cell-top',
+    	'ctrl-a': 'vim-binding:select-all-in-current-cell',
     	'ctrl-j': 'jupyter-notebook:select-next-cell',
     	'ctrl-k': 'jupyter-notebook:select-previous-cell',
     	'shift-j': 'jupyter-notebook:extend-marked-cells-below',
