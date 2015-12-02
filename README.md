@@ -98,6 +98,18 @@ require(['codemirror/keymap/vim'], function() {
 });
 ```
 
+### Different cell background during insert mode
+
+Create a your `custom.css` (usually at `~/.jupyter/custom/custom.css`) and configure the insert background like below:
+
+```css
+/*  Jupyter cell is in insert mode when code mirror */
+.edit_mode .cm-s-ipython.CodeMirror-focused:not(.cm-fat-cursor) {
+    background-color: #EFDDAD;
+}
+```
+
+
 # License
 
 The MIT License (MIT)
