@@ -121,7 +121,23 @@ define([
   // Register custom actions
   var km = namespace.keyboard_manager;
   km.actions.register({
-    'help': 'focus the first cell',
+    'help': 'select a next cell and enter edit mode',
+    'help_index': 'zz',
+    'handler': function(env) {
+      env.notebook.select_next();
+      env.notebook.edit_mode();
+    }
+  }, 'select-next-cell-and-edit', 'vim-binding');
+  km.actions.register({
+    'help': 'select a previous cell and enter edit mode',
+    'help_index': 'zz',
+    'handler': function(env) {
+      env.notebook.select_prev();
+      env.notebook.edit_mode();
+    }
+  }, 'select-previous-cell-and-edit', 'vim-binding');
+  km.actions.register({
+    'help': 'select the first cell',
     'help_index': 'zz',
     'handler': function(env) {
       var cells = env.notebook.get_cells();
@@ -130,9 +146,9 @@ define([
       }
       return false;
     }
-  }, 'focus-first-cell', 'vim-binding');
+  }, 'select-first-cell', 'vim-binding');
   km.actions.register({
-    'help': 'focus the last cell',
+    'help': 'select the last cell',
     'help_index': 'zz',
     'handler': function(env) {
       var cells = env.notebook.get_cells();
@@ -141,7 +157,7 @@ define([
       }
       return false;
     }
-  }, 'focus-last-cell', 'vim-binding');
+  }, 'select-last-cell', 'vim-binding');
   km.actions.register({
     'help': 'scroll down',
     'help_index': 'zz',
@@ -182,8 +198,8 @@ define([
     km.edit_shortcuts.clear_shortcuts();
     km.edit_shortcuts.add_shortcut('ctrl-shift--', 'jupyter-notebook:split-cell-at-cursor');
     km.edit_shortcuts.add_shortcut('ctrl-shift-subtract', 'jupyter-notebook:split-cell-at-cursor');
-    km.edit_shortcuts.add_shortcut('ctrl-j', 'jupyter-notebook:select-next-cell');
-    km.edit_shortcuts.add_shortcut('ctrl-k', 'jupyter-notebook:select-previous-cell');
+    km.edit_shortcuts.add_shortcut('ctrl-j', 'vim-binding:select-next-cell-and-edit');
+    km.edit_shortcuts.add_shortcut('ctrl-k', 'vim-binding:select-previous-cell-and-edit');
     km.edit_shortcuts.add_shortcut('alt-enter', 'jupyter-notebook:run-cell-and-insert-below');
     km.edit_shortcuts.add_shortcut('ctrl-enter', 'jupyter-notebook:run-cell');
     km.edit_shortcuts.add_shortcut('shift-enter', 'jupyter-notebook:run-cell-and-select-next');
@@ -214,8 +230,8 @@ define([
     km.command_shortcuts.add_shortcut('shift-j', 'jupyter-notebook:extend-marked-cells-below');
     km.command_shortcuts.add_shortcut('shift-k', 'jupyter-notebook:extend-marked-cells-above');
     km.command_shortcuts.add_shortcut('shift-m', 'jupyter-notebook:merge-cells');
-    km.command_shortcuts.add_shortcut('g,g', 'vim-binding:focus-first-cell');
-    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding:focus-last-cell');
+    km.command_shortcuts.add_shortcut('g,g', 'vim-binding:select-first-cell');
+    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding:select-last-cell');
     km.command_shortcuts.add_shortcut('ctrl-u', 'jupyter-notebook:scroll-notebook-up');
     km.command_shortcuts.add_shortcut('ctrl-d', 'jupyter-notebook:scroll-notebook-down');
     km.command_shortcuts.add_shortcut('u', 'jupyter-notebook:undo-cell-deletion');
@@ -241,8 +257,8 @@ define([
     km.edit_shortcuts.clear_shortcuts();
     km.edit_shortcuts.add_shortcut('ctrl-shift--', 'ipython.split-cell-at-cursor');
     km.edit_shortcuts.add_shortcut('ctrl-shift-subtract', 'ipython.split-cell-at-cursor');
-    km.edit_shortcuts.add_shortcut('ctrl-j', 'ipython.select-next-cell');
-    km.edit_shortcuts.add_shortcut('ctrl-k', 'ipython.select-previous-cell');
+    km.edit_shortcuts.add_shortcut('ctrl-j', 'vim-binding.select-next-cell-and-edit');
+    km.edit_shortcuts.add_shortcut('ctrl-k', 'vim-binding.select-previous-cell-and-edit');
     km.edit_shortcuts.add_shortcut('alt-enter', 'ipython.execute-and-insert-after');
     km.edit_shortcuts.add_shortcut('ctrl-enter', 'ipython.execute-in-place');
     km.edit_shortcuts.add_shortcut('shift-enter', 'ipython.run-select-next');
@@ -273,8 +289,8 @@ define([
     km.command_shortcuts.add_shortcut('shift-j', 'ipython.extend-selection-next');
     km.command_shortcuts.add_shortcut('shift-k', 'ipython.extend-selection-previous');
     km.command_shortcuts.add_shortcut('shift-m', 'ipython.merge-selected-cells');
-    km.command_shortcuts.add_shortcut('g,g', 'vim-binding.focus-first-cell');
-    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding.focus-last-cell');
+    km.command_shortcuts.add_shortcut('g,g', 'vim-binding.select-first-cell');
+    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding.select-last-cell');
     km.command_shortcuts.add_shortcut('ctrl-u', 'ipython.scroll-up');
     km.command_shortcuts.add_shortcut('ctrl-d', 'ipython.scroll-down');
     km.command_shortcuts.add_shortcut('u', 'ipython.undo-last-cell-deletion');
