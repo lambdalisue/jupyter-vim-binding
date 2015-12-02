@@ -18,11 +18,12 @@
 "use strict";
 
 define([
+  'require',
   'base/js/namespace',
   'notebook/js/notebook',
   'notebook/js/cell',
   'codemirror/keymap/vim'
-], function(namespace, notebook, cell) {
+], function(require, namespace, notebook, cell) {
   var undefined;
   var extend = function(destination, source) {
     for (var property in source) {
@@ -314,8 +315,18 @@ define([
     km.command_shortcuts.add_shortcut('6', 'ipython.change-selected-cell-to-heading-6');
   }
 
+  var requireCSS = function(url) {
+    var link = document.createElement('link');
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.href = require.toUrl(url);
+    document.getElementsByTagName('head')[0].appendChild(link);
+  };
+
   var exports = {
     'load_ipython_extension': function() {
+      // Include required CSS
+      requireCSS('./vim_binding.css');
       // Initialize
       var cm_config = cell.Cell.options_default.cm_config;
       cm_config.keyMap = 'vim';

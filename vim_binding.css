@@ -1,0 +1,24 @@
+/* Improve command area of CodeMirror Vim */
+.CodeMirror-dialog-bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 100;
+  color: #eee;
+  background-color: #333;
+}
+.CodeMirror-dialog-bottom input {
+  border: none;
+  outline: none;
+  color: inherit;
+  background-color: inherit;
+  width: calc(100% - 1em);
+}
+/* Jupyter cell is in normal mode when code mirror */
+.edit_mode .cell.selected .CodeMirror-focused.cm-fat-cursor {
+  background-color: #F5F6EB;
+}
+/* Jupyter cell is in insert mode when code mirror */
+.edit_mode .cell.selected .CodeMirror-focused:not(.cm-fat-cursor) {
+  background-color: #F6EBF1;
+}

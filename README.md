@@ -107,18 +107,18 @@ require(['base/js/namespace'], function(namespace) {
 });
 ```
 
-### Different cell background during insert mode
+### Different cell background during normal or insert mode
 
 Create a your `custom.css` (usually at `~/.jupyter/custom/custom.css`) and configure the insert background like below:
 
 ```css
-/*  Jupyter cell is in normal mode when code mirror */
-.edit_mode .cm-s-ipython.CodeMirror-focused {
-    background-color: #DDEDEF;
+/* Jupyter cell is in normal mode when code mirror */
+.edit_mode .cell.selected .CodeMirror-focused.cm-fat-cursor {
+  background-color: #F5F6EB;
 }
-/*  Jupyter cell is in insert mode when code mirror */
-.edit_mode .cm-s-ipython.CodeMirror-focused:not(.cm-fat-cursor) {
-    background-color: #EFEFAE;
+/* Jupyter cell is in insert mode when code mirror */
+.edit_mode .cell.selected .CodeMirror-focused:not(.cm-fat-cursor) {
+  background-color: #F6EBF1;
 }
 ```
 
