@@ -78,7 +78,35 @@ define([
     }
     original.handle_edit_mode.call(this, cell);
   };
-
+  notebook.Notebook.prototype.select_closest_cell = function() {
+      var site = document.querySelector('#site');
+      var elems = this.get_cell_elements();
+      var index = this.get_selected_index();
+      var viewport = {
+        'top': site.scrollTop,
+        'bottom': site.scrollTop + (site.clientHeight - site.offsetTop),
+      };
+      var box = {
+        'top': elems[index].offsetTop,
+        'bottom': elems[index].offsetTop + elems[index].clientHeight,
+      };
+      if (box.top < viewport.top) {
+        for (var i=index; i<elems.length; i++) {
+          if (elems[i].offsetTop - site.offsetTop >= viewport.top) {
+            index = i;
+            break;
+          }
+        }
+      } else if(box.bottom > viewport.bottom) {
+        for (var i=index; i>=0; i--) {
+          if (elems[i].offsetTop + elems[i].clientHeight - site.offsetTop < viewport.bottom) {
+            index = i;
+            break;
+          }
+        }
+      }
+      this.select(index);
+  };
   // Register custom actions
   var km = namespace.keyboard_manager;
   km.actions.register({
@@ -91,7 +119,7 @@ define([
       }
       return false;
     }
-  }, 'focus_first_cell', 'vim_binding');
+  }, 'focus-first-cell', 'vim-binding');
   km.actions.register({
     'help': 'focus the last cell',
     'help_index': 'zz',
@@ -102,7 +130,40 @@ define([
       }
       return false;
     }
-  }, 'focus_last_cell', 'vim_binding');
+  }, 'focus-last-cell', 'vim-binding');
+  km.actions.register({
+    'help': 'scroll down',
+    'help_index': 'zz',
+    'handler': function(env) {
+      // scroll down
+      var scrollUnit = 30;
+      var site = document.querySelector('#site');
+      var prev = site.scrollTop;
+      site.scrollTop += scrollUnit;
+      if (prev === site.scrollTop) {
+        env.notebook.select_next();
+      } else {
+        env.notebook.select_closest_cell();
+      }
+      return false
+    }
+  }, 'scroll-down', 'vim-binding');
+  km.actions.register({
+    'help': 'scroll up',
+    'help_index': 'zz',
+    'handler': function(env) {
+      var scrollUnit = 30;
+      var site = document.querySelector('#site');
+      var prev = site.scrollTop;
+      site.scrollTop -= scrollUnit;
+      if (prev === site.scrollTop) {
+        env.notebook.select_prev();
+      } else {
+        env.notebook.select_closest_cell();
+      }
+      return false;
+    }
+  }, 'scroll-up', 'vim-binding');
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
@@ -133,15 +194,17 @@ define([
     km.command_shortcuts.add_shortcut('q', 'jupyter-notebook:close-pager');
     km.command_shortcuts.add_shortcut('enter', 'jupyter-notebook:enter-edit-mode');
     km.command_shortcuts.add_shortcut('i', 'jupyter-notebook:enter-edit-mode');
-    km.command_shortcuts.add_shortcut('j', 'jupyter-notebook:select-next-cell');
-    km.command_shortcuts.add_shortcut('k', 'jupyter-notebook:select-previous-cell');
+    km.command_shortcuts.add_shortcut('j', 'vim-binding:scroll-down');
+    km.command_shortcuts.add_shortcut('k', 'vim-binding:scroll-up');
+    km.command_shortcuts.add_shortcut('z,z', 'jupyter-notebook:scroll-cell-center');
+    km.command_shortcuts.add_shortcut('z,t', 'jupyter-notebook:scroll-cell-top');
     km.command_shortcuts.add_shortcut('ctrl-j', 'jupyter-notebook:select-next-cell');
     km.command_shortcuts.add_shortcut('ctrl-k', 'jupyter-notebook:select-previous-cell');
     km.command_shortcuts.add_shortcut('shift-j', 'jupyter-notebook:extend-marked-cells-below');
     km.command_shortcuts.add_shortcut('shift-k', 'jupyter-notebook:extend-marked-cells-above');
     km.command_shortcuts.add_shortcut('shift-m', 'jupyter-notebook:merge-cells');
-    km.command_shortcuts.add_shortcut('g,g', 'vim_binding:focus_first_cell');
-    km.command_shortcuts.add_shortcut('shift-g', 'vim_binding:focus_last_cell');
+    km.command_shortcuts.add_shortcut('g,g', 'vim-binding:focus-first-cell');
+    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding:focus-last-cell');
     km.command_shortcuts.add_shortcut('ctrl-u', 'jupyter-notebook:scroll-notebook-up');
     km.command_shortcuts.add_shortcut('ctrl-d', 'jupyter-notebook:scroll-notebook-down');
     km.command_shortcuts.add_shortcut('u', 'jupyter-notebook:undo-cell-deletion');
@@ -190,15 +253,17 @@ define([
     km.command_shortcuts.add_shortcut('q', 'ipython.close-pager');
     km.command_shortcuts.add_shortcut('enter', 'ipython.enter-edit-mode');
     km.command_shortcuts.add_shortcut('i', 'ipython.enter-edit-mode');
-    km.command_shortcuts.add_shortcut('j', 'ipython.select-next-cell');
-    km.command_shortcuts.add_shortcut('k', 'ipython.select-previous-cell');
+    km.command_shortcuts.add_shortcut('j', 'vim-binding.scroll-down');
+    km.command_shortcuts.add_shortcut('k', 'vim-binding.scroll-up');
+    km.command_shortcuts.add_shortcut('z,z', 'ipython.scroll-cell-center');
+    km.command_shortcuts.add_shortcut('z,t', 'ipython.scroll-cell-top');
     km.command_shortcuts.add_shortcut('ctrl-j', 'ipython.select-next-cell');
     km.command_shortcuts.add_shortcut('ctrl-k', 'ipython.select-previous-cell');
     km.command_shortcuts.add_shortcut('shift-j', 'ipython.extend-selection-next');
     km.command_shortcuts.add_shortcut('shift-k', 'ipython.extend-selection-previous');
     km.command_shortcuts.add_shortcut('shift-m', 'ipython.merge-selected-cells');
-    km.command_shortcuts.add_shortcut('g,g', 'vim_binding.focus_first_cell');
-    km.command_shortcuts.add_shortcut('shift-g', 'vim_binding.focus_last_cell');
+    km.command_shortcuts.add_shortcut('g,g', 'vim-binding.focus-first-cell');
+    km.command_shortcuts.add_shortcut('shift-g', 'vim-binding.focus-last-cell');
     km.command_shortcuts.add_shortcut('ctrl-u', 'ipython.scroll-up');
     km.command_shortcuts.add_shortcut('ctrl-d', 'ipython.scroll-down');
     km.command_shortcuts.add_shortcut('u', 'ipython.undo-last-cell-deletion');
