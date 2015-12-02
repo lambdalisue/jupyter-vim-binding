@@ -96,6 +96,8 @@ require(['codemirror/keymap/vim'], function() {
   // Use gj/gk instead of j/k
   CodeMirror.Vim.map("j", "gj", "normal");
   CodeMirror.Vim.map("k", "gk", "normal");
+  // use ctrl-a to select all
+  CodeMirror.Vim.map("<C-a>", "ggVG", "normal");
 });
 // Configure Jupyter (VimBinding)
 require(['base/js/namespace'], function(namespace) {
