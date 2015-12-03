@@ -83,11 +83,23 @@ define([
     }
     original.handle_command_mode.call(this, cell);
   };
+
+  // we want to stay in the insert mode if we blur & focus our window
+  var wasInInsertBeforeBlur = false;
+  window.addEventListener("blur", function(){
+      var cell = namespace.notebook.get_selected_cell();
+      if(cell && cell.code_mirror){
+        var cm = cell.code_mirror;
+        wasInInsertBeforeBlur = cm.state.vim.insertMode;
+      }
+  });
   notebook.Notebook.prototype.handle_edit_mode = function(cell) {
     // Make sure that the CodeMirror is in Vim's Normal mode
-    if (cell.code_mirror) {
+    // except we were in insert mode before the last blur
+    if (cell.code_mirror && !wasInInsertBeforeBlur){
       CodeMirror.Vim.Jupyter.leaveInsertMode(cell.code_mirror);
     }
+    wasInInsertBeforeBlur = false;
     original.handle_edit_mode.call(this, cell);
   };
   notebook.Notebook.prototype.select_closest_cell = function(direction) {
