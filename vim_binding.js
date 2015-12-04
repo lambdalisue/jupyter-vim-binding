@@ -372,7 +372,10 @@ define([
         var cm = cell.code_mirror;
         if (cm) {
           cm.setOption('keyMap', cm_config.keyMap);
-          cm.setOption('extraKeys', cm_config.extraKeys);
+          cm.setOption('extraKeys', extend(
+            cm.getOption('extraKeys') || {},
+            cm_config.extraKeys
+          ));
         }
       });
     },
