@@ -215,6 +215,30 @@ define([
       return false;
     }
   }, 'scroll-up', 'vim-binding');
+  km.actions.register({
+    'help': 'expand output',
+    'handler': function(env) {
+      env.notebook.expand_output();
+    }
+  }, 'expand-output', 'vim-binding');
+  km.actions.register({
+    'help': 'expand all output',
+    'handler': function(env) {
+      env.notebook.expand_all_output();
+    }
+  }, 'expand-all-output', 'vim-binding');
+  km.actions.register({
+    'help': 'collapse output',
+    'handler': function(env) {
+      env.notebook.collapse_output();
+    }
+  }, 'collapse-output', 'vim-binding');
+  km.actions.register({
+    'help': 'collapse all output',
+    'handler': function(env) {
+      env.notebook.collapse_all_output();
+    }
+  }, 'collapse-all-output', 'vim-binding');
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
@@ -228,6 +252,7 @@ define([
       'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
       'ctrl-enter': 'jupyter-notebook:run-cell',
       'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
+      'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
       'shift': 'jupyter-notebook:ignore',
       'ctrl-s': 'jupyter-notebook:save-notebook',
       'ctrl-1': 'jupyter-notebook:change-cell-to-code',
@@ -257,6 +282,8 @@ define([
       'shift-j': 'jupyter-notebook:extend-marked-cells-below',
       'shift-k': 'jupyter-notebook:extend-marked-cells-above',
       'shift-m': 'jupyter-notebook:merge-cells',
+      'ctrl-m': 'jupyter-notebook:merge-cell-with-next-cell',
+      'ctrl-shift-m': 'jupyter-notebook:merge-cell-with-previous-cell',
       'g,g': 'vim-binding:select-first-cell',
       'shift-g': 'vim-binding:select-last-cell',
       'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
@@ -270,9 +297,17 @@ define([
       'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
       'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
       'ctrl-s': 'jupyter-notebook:save-notebook',
+      'shift-r': 'jupyter-notebook:rename-notebook',
       'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
       'ctrl-enter': 'jupyter-notebook:run-cell',
       'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
+      'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
+      'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
+      'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
+      'z,m': 'vim-binding:collapse-output',
+      'z,shift-m': 'vim-binding:collapse-all-output',
+      'z,r': 'vim-binding:expand-output',
+      'z,shift-r': 'vim-binding:expand-all-output',
       '0,0': 'jupyter-notebook:confirm-restart-kernel',
       '1': 'jupyter-notebook:change-cell-to-heading-1',
       '2': 'jupyter-notebook:change-cell-to-heading-2',
@@ -282,6 +317,32 @@ define([
       '6': 'jupyter-notebook:change-cell-to-heading-6',
     });
   } else {
+    // For backward compatibility
+    km.actions.register({
+      'help': 'run all cells',
+      'help_index': 'bd',
+      'handler': function(env) {
+        env.notebook.execute_all_cells();
+      }
+    }, 'run-all-cells', 'vim-binding');
+    km.actions.register({
+      'handler': function(env) {
+        env.notebook.merge_cell_above();
+      }
+    }, 'merge-cell-with-previous-cell', 'vim-binding');
+    km.actions.register({
+      'help': 'Rename current notebook',
+      'handler': function(env) {
+        env.notebook.save_widget.rename_notebook({notebook: env.notebook});
+      }
+    }, 'rename-notebook', 'vim-binding');
+    km.actions.register({
+      'help': 'Toggle the hiddens state of all output areas',
+      'handler': function(env) {
+        env.notebook.toggle_all_output();
+      }
+    }, 'toggle-all-cells-output-collapsed', 'vim-binding');
+
     km.edit_shortcuts.clear_shortcuts();
     addShortcuts(km.edit_shortcuts, {
       'ctrl-shift--': 'ipython.split-cell-at-cursor',
@@ -291,6 +352,7 @@ define([
       'alt-enter': 'ipython.execute-and-insert-after',
       'ctrl-enter': 'ipython.execute-in-place',
       'shift-enter': 'ipython.run-select-next',
+      'ctrl-shift-enter': 'vim-binding.run-all-cells',
       'shift': 'ipython.ignore',
       'ctrl-s': 'ipython.save-notebook',
       'ctrl-1': 'ipython.change-selected-cell-to-code-cell',
@@ -320,6 +382,8 @@ define([
       'shift-j': 'ipython.extend-selection-next',
       'shift-k': 'ipython.extend-selection-previous',
       'shift-m': 'ipython.merge-selected-cells',
+      'ctrl-m': 'ipython.merge-selected-cell-with-cell-after',
+      'ctrl-shift-m': 'vim-binding.merge-cell-with-previous-cell',
       'g,g': 'vim-binding.select-first-cell',
       'shift-g': 'vim-binding.select-last-cell',
       'ctrl-u': 'ipython.scroll-up',
@@ -333,9 +397,17 @@ define([
       'shift-v': 'ipython.toggle-output-visibility-selected-cell',
       'shift-s': 'ipython.toggle-output-scrolling-selected-cell',
       'ctrl-s': 'ipython.save-notebook',
+      'shift-r': 'vim-binding.rename-notebook',
       'alt-enter': 'ipython.execute-and-insert-after',
       'ctrl-enter': 'ipython.execute-in-place',
       'shift-enter': 'ipython.run-select-next',
+      'ctrl-shift-enter': 'vim-binding.run-all-cells',
+      'z,a': 'ipython.toggle-output-visibility-selected-cell',
+      'z,shift-a': 'vim-binding.toggle-all-cells-output-collapsed',
+      'z,m': 'vim-binding.collapse-output',
+      'z,shift-m': 'vim-binding.collapse-all-output',
+      'z,r': 'vim-binding.expand-output',
+      'z,shift-r': 'vim-binding.expand-all-output',
       '0,0': 'ipython.restart-kernel',
       '1': 'ipython.change-selected-cell-to-heading-1',
       '2': 'ipython.change-selected-cell-to-heading-2',
