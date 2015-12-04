@@ -239,6 +239,27 @@ define([
       env.notebook.collapse_all_output();
     }
   }, 'collapse-all-output', 'vim-binding');
+  km.actions.register({
+    'handler': function(env) {
+      env.notebook.command_mode();
+      env.notebook.to_code();
+      env.notebook.edit_mode();
+    }
+  }, 'change-cell-to-code-and-edit', 'vim-binding');
+  km.actions.register({
+    'handler': function(env) {
+      env.notebook.command_mode();
+      env.notebook.to_markdown();
+      env.notebook.edit_mode();
+    }
+  }, 'change-cell-to-markdown-and-edit', 'vim-binding');
+  km.actions.register({
+    'handler': function(env) {
+      env.notebook.command_mode();
+      env.notebook.to_raw();
+      env.notebook.edit_mode();
+    }
+  }, 'change-cell-to-raw-and-edit', 'vim-binding');
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
@@ -255,9 +276,9 @@ define([
       'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
       'shift': 'jupyter-notebook:ignore',
       'ctrl-s': 'jupyter-notebook:save-notebook',
-      'ctrl-1': 'jupyter-notebook:change-cell-to-code',
-      'ctrl-2': 'jupyter-notebook:change-cell-to-markdown',
-      'ctrl-3': 'jupyter-notebook:change-cell-to-raw',
+      'ctrl-1': 'vim-binding:change-cell-to-code-and-edit',
+      'ctrl-2': 'vim-binding:change-cell-to-markdown-and-edit',
+      'ctrl-3': 'vim-binding:change-cell-to-raw-and-edit',
     });
 
     km.command_shortcuts.clear_shortcuts();
@@ -355,9 +376,9 @@ define([
       'ctrl-shift-enter': 'vim-binding.run-all-cells',
       'shift': 'ipython.ignore',
       'ctrl-s': 'ipython.save-notebook',
-      'ctrl-1': 'ipython.change-selected-cell-to-code-cell',
-      'ctrl-2': 'ipython.change-selected-cell-to-markdown-cell',
-      'ctrl-3': 'ipython.change-selected-cell-to-raw-cell',
+      'ctrl-1': 'vim-binding.change-cell-to-code-and-edit',
+      'ctrl-2': 'vim-binding.change-cell-to-markdown-and-edit',
+      'ctrl-3': 'vim-binding.change-cell-to-raw-and-edit',
     });
 
     km.command_shortcuts.clear_shortcuts();
