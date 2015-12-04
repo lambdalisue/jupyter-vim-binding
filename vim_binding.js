@@ -66,9 +66,6 @@ define([
       leaveNormalMode(cm);
     }
   };
-  var insertSoftTab = function insertSoftTab(cm) {
-    cm.execCommand('insertSoftTab');
-  };
 
   // Extend Jupyter
   var ORIGINAL = Object.freeze({
@@ -456,7 +453,6 @@ define([
       cm_config.keyMap = 'vim';
       cm_config.extraKeys = extend(cm_config.extraKeys || {}, {
         'Esc': leaveInsertOrNormalMode,
-        'Tab': insertSoftTab,
         'Ctrl-C': false,  // To enable clipboard copy
       });
 
