@@ -142,6 +142,13 @@ define([
   // Register custom actions
   var km = ns.keyboard_manager;
   km.actions.register({
+    'handler': function(env) {
+      env.notebook.command_mode();
+      env.notebook.execute_cell();
+      env.notebook.edit_mode();
+    }
+  }, 'run-cell-and-edit', 'vim-binding');
+  km.actions.register({
     'help': 'select a next cell and enter edit mode',
     'help_index': 'zz',
     'handler': function(env) {
@@ -268,7 +275,7 @@ define([
       'ctrl-shift-j': 'vim-binding:select-next-cell-and-edit',
       'ctrl-shift-k': 'vim-binding:select-previous-cell-and-edit',
       'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-      'ctrl-enter': 'jupyter-notebook:run-cell',
+      'ctrl-enter': 'vim-binding:run-cell-and-edit',
       'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
       'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
       'shift': 'jupyter-notebook:ignore',
