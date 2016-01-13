@@ -290,6 +290,7 @@ define([
     km.command_shortcuts.clear_shortcuts();
     addShortcuts(km.command_shortcuts, {
       'ctrl-c': 'jupyter-notebook:interrupt-kernel',
+      'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
       'shift-o': 'jupyter-notebook:insert-cell-above',
       'o': 'jupyter-notebook:insert-cell-below',
       'y,y': 'jupyter-notebook:copy-cell',
@@ -391,6 +392,7 @@ define([
     km.command_shortcuts.clear_shortcuts();
     addShortcuts(km.command_shortcuts, {
       'ctrl-c': 'ipython.interrupt-kernel',
+      'cmdtrl-shift-p': 'ipython.show-command-palette',
       'shift-o': 'ipython.insert-cell-before',
       'o': 'ipython.insert-cell-after',
       'y,y': 'ipython.copy-selected-cell',
