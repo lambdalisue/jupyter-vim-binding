@@ -374,8 +374,6 @@ define([
     addShortcuts(km.edit_shortcuts, {
       'ctrl-shift--': 'ipython.split-cell-at-cursor',
       'ctrl-shift-subtract': 'ipython.split-cell-at-cursor',
-      'ctrl-j': 'vim-binding.select-next-cell-and-edit',
-      'ctrl-k': 'vim-binding.select-previous-cell-and-edit',
       'alt-enter': 'ipython.execute-and-insert-after',
       'ctrl-enter': 'ipython.execute-in-place',
       'shift-enter': 'ipython.run-select-next',
@@ -445,7 +443,92 @@ define([
     });
   }
 
-  var requireCSS = function requireCSS(url) {
+  // motion commands should jump to the next or previous cell
+  // hence we patch CodeMirror's moveByLines method
+
+  var Pos = CodeMirror.Pos;
+  // method is based on moveByLines from CodeMirror's Vim mode
+  // @see: https://github.com/codemirror/CodeMirror/blob/master/keymap/vim.js#L1677 
+  var moveByLinesOrCell = function(cm, head, motionArgs, vim){
+      var cur = head;
+      var endCh = cur.ch;
+      // TODO: these references will be undefined
+      // Depending what our last motion was, we may want to do different
+      // things. If our last motion was moving vertically, we want to
+      // preserve the HPos from our last horizontal move.  If our last motion
+      // was going to the end of a line, moving vertically we should go to
+      // the end of the line, etc.
+      switch (vim.lastMotion) {
+          case this.moveByLines:
+          case this.moveByDisplayLines:
+          case this.moveByScroll:
+          case this.moveToColumn:
+          case this.moveToEol:
+              // JUPYTER PATCH: add our custom method to the motion cases
+          case moveByLinesOrCell:
+              endCh = vim.lastHPos;
+              break;
+          default:
+              vim.lastHPos = endCh;
+      }
+      var repeat = motionArgs.repeat+(motionArgs.repeatOffset||0);
+      var line = motionArgs.forward ? cur.line + repeat : cur.line - repeat;
+      var first = cm.firstLine();
+      var last = cm.lastLine();
+      // Vim cancels linewise motions that start on an edge and move beyond
+      // that edge. It does not cancel motions that do not start on an edge.
+
+      // JUPYTER PATCH BEGIN
+      // here we insert the jumps to the next cells
+      if(line < first || line > last){
+          var current_cell = ns.notebook.get_selected_cell();
+          var diff = 0;
+          var key = '';
+          if (line < first) {
+              ns.notebook.select_prev();
+              diff = first - line;
+              key = 'k';
+          } else if(line > last) {
+              ns.notebook.select_next()
+              diff = line - last;
+              key = 'j';
+          }
+          ns.notebook.edit_mode();
+          // send remaining lines to next/prev cm instance
+          var new_cell = ns.notebook.get_selected_cell();
+          diff--; // we already jump one line
+          if(current_cell != new_cell && !!new_cell){
+              // reset cursor to top or end line 
+              var cm2 = new_cell.code_mirror;
+              cm2.setCursor({ch: cm2.getCursor().ch, line: (line < first) ? cm2.lastLine(): cm2.firstLine()});
+              if(diff > 0){
+                  var seq = "" + diff  + key;
+                  for(var i=0; i<seq.length;i++){
+                      CodeMirror.Vim.handleKey(cm2, seq[i]);
+                  };
+              }
+          }
+          return;
+      }
+      // JUPYTER PATCH END
+
+      if (motionArgs.toFirstChar){
+          endCh=findFirstNonWhiteSpaceCharacter(cm.getLine(line));
+          vim.lastHPos = endCh;
+      }
+      vim.lastHSPos = cm.charCoords(Pos(line, endCh),'div').left;
+      return Pos(line, endCh);
+  };
+
+  // we remap the motion keys with our patched method
+  CodeMirror.Vim.defineMotion("moveByLinesOrCell", moveByLinesOrCell);
+  CodeMirror.Vim.mapCommand("k", "motion", "moveByLinesOrCell", {forward: false, linewise: true }, {context: "normal"}); 
+  CodeMirror.Vim.mapCommand("j", "motion", "moveByLinesOrCell", {forward: true, linewise: true }, {context: "normal"});
+  CodeMirror.Vim.mapCommand("+", "motion", "moveByLinesOrCell", {forward: true, toFirstChar: true }, {context: "normal"});
+  CodeMirror.Vim.mapCommand("-", "motion", "moveByLinesOrCell", {forward: false, toFirstChar: true }, {context: "normal"});
+  CodeMirror.Vim.mapCommand("_", "motion", "moveByLinesOrCell", {forward: true, toFirstChar: true, repeatOffset: -1 }, {context: "normal"});
+
+  var requireCSS = function(url) {
     var link = document.createElement('link');
     link.type = 'text/css';
     link.rel = 'stylesheet';
