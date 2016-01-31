@@ -151,6 +151,15 @@ define([
   // Register custom actions
   var km = ns.keyboard_manager;
   km.actions.register({
+    'help': 'execute cell and enter edit mode',
+    'help_index': 'zz',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      env.notebook.execute_cell();
+      env.notebook.edit_mode();
+    }
+  }, 'run-cell-and-edit', 'vim-binding');
+  km.actions.register({
     'help': 'select a next cell and enter edit mode',
     'help_index': 'zz',
     'handler': function(env) {
@@ -277,7 +286,7 @@ define([
       'ctrl-j': 'vim-binding:select-next-cell-and-edit',
       'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
       'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-      'ctrl-enter': 'jupyter-notebook:run-cell',
+      'ctrl-enter': 'vim-binding:run-cell-and-edit',
       'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
       'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
       'shift': 'jupyter-notebook:ignore',
@@ -290,6 +299,7 @@ define([
     km.command_shortcuts.clear_shortcuts();
     addShortcuts(km.command_shortcuts, {
       'ctrl-c': 'jupyter-notebook:interrupt-kernel',
+      'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
       'shift-o': 'jupyter-notebook:insert-cell-above',
       'o': 'jupyter-notebook:insert-cell-below',
       'y,y': 'jupyter-notebook:copy-cell',
@@ -299,6 +309,7 @@ define([
       'esc': 'jupyter-notebook:close-pager',
       'q': 'jupyter-notebook:close-pager',
       'enter': 'jupyter-notebook:enter-edit-mode',
+      'f': 'jupyter-notebook:find-and-replace',
       'i': 'jupyter-notebook:enter-edit-mode',
       'j': 'vim-binding:scroll-down',
       'k': 'vim-binding:scroll-up',
@@ -306,8 +317,8 @@ define([
       'z,t': 'jupyter-notebook:scroll-cell-top',
       'ctrl-j': 'jupyter-notebook:select-next-cell',
       'ctrl-k': 'jupyter-notebook:select-previous-cell',
-      'shift-j': 'jupyter-notebook:extend-marked-cells-below',
-      'shift-k': 'jupyter-notebook:extend-marked-cells-above',
+      'shift-j': 'jupyter-notebook:extend-selection-below',
+      'shift-k': 'jupyter-notebook:extend-selection-above',
       'shift-m': 'jupyter-notebook:merge-cells',
       'ctrl-m': 'jupyter-notebook:merge-cell-with-next-cell',
       'ctrl-shift-m': 'jupyter-notebook:merge-cell-with-previous-cell',
@@ -375,7 +386,7 @@ define([
       'ctrl-shift--': 'ipython.split-cell-at-cursor',
       'ctrl-shift-subtract': 'ipython.split-cell-at-cursor',
       'alt-enter': 'ipython.execute-and-insert-after',
-      'ctrl-enter': 'ipython.execute-in-place',
+      'ctrl-enter': 'vim-binding.run-cell-and-edit',
       'shift-enter': 'ipython.run-select-next',
       'ctrl-shift-enter': 'vim-binding.run-all-cells',
       'shift': 'ipython.ignore',
@@ -388,6 +399,7 @@ define([
     km.command_shortcuts.clear_shortcuts();
     addShortcuts(km.command_shortcuts, {
       'ctrl-c': 'ipython.interrupt-kernel',
+      'cmdtrl-shift-p': 'ipython.show-command-palette',
       'shift-o': 'ipython.insert-cell-before',
       'o': 'ipython.insert-cell-after',
       'y,y': 'ipython.copy-selected-cell',
@@ -397,6 +409,7 @@ define([
       'esc': 'ipython.close-pager',
       'q': 'ipython.close-pager',
       'enter': 'ipython.enter-edit-mode',
+      'f': 'ipython.find-and-replace',
       'i': 'ipython.enter-edit-mode',
       'j': 'vim-binding.scroll-down',
       'k': 'vim-binding.scroll-up',
@@ -404,8 +417,8 @@ define([
       'z,t': 'ipython.scroll-cell-top',
       'ctrl-j': 'ipython.select-next-cell',
       'ctrl-k': 'ipython.select-previous-cell',
-      'shift-j': 'ipython.extend-selection-next',
-      'shift-k': 'ipython.extend-selection-previous',
+      'shift-j': 'ipython.extend-selection-below',
+      'shift-k': 'ipython.extend-selection-above',
       'shift-m': 'ipython.merge-selected-cells',
       'ctrl-m': 'ipython.merge-selected-cell-with-cell-after',
       'ctrl-shift-m': 'vim-binding.merge-cell-with-previous-cell',
