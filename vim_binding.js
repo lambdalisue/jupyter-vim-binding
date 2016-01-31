@@ -81,11 +81,20 @@ define([
     }
     ORIGINAL.handle_command_mode.call(this, cell);
   };
+  var wasInInsertBeforeBlur = false;
+  window.addEventListener('blur', function() {
+    var cell = ns.notebook.get_selected_cell();
+    if (cell && cell.code_mirror) {
+      var cm = cell.code_mirror;
+      wasInInsertBeforeBlur = cm.state.vim.insertMode;
+    }
+  });
   notebook.Notebook.prototype.handle_edit_mode = function(cell) {
     // Make sure that the CodeMirror is in Vim's Normal mode
-    if (cell.code_mirror) {
+    if (cell.code_mirror && !wasInInsertBeforeBlur) {
       leaveInsertMode(cell.code_mirror);
     }
+    wasInInsertBeforeBlur = false;
     ORIGINAL.handle_edit_mode.call(this, cell);
   };
   var getElementBox = function getElementBox(element) {
