@@ -265,8 +265,8 @@ define([
     addShortcuts(km.edit_shortcuts, {
       'ctrl-shift--': 'jupyter-notebook:split-cell-at-cursor',
       'ctrl-shift-subtract': 'jupyter-notebook:split-cell-at-cursor',
-      'ctrl-shift-j': 'vim-binding:select-next-cell-and-edit',
-      'ctrl-shift-k': 'vim-binding:select-previous-cell-and-edit',
+      'ctrl-j': 'vim-binding:select-next-cell-and-edit',
+      'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
       'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
       'ctrl-enter': 'jupyter-notebook:run-cell',
       'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
@@ -365,8 +365,8 @@ define([
     addShortcuts(km.edit_shortcuts, {
       'ctrl-shift--': 'ipython.split-cell-at-cursor',
       'ctrl-shift-subtract': 'ipython.split-cell-at-cursor',
-      'ctrl-shift-j': 'vim-binding.select-next-cell-and-edit',
-      'ctrl-shift-k': 'vim-binding.select-previous-cell-and-edit',
+      'ctrl-j': 'vim-binding.select-next-cell-and-edit',
+      'ctrl-k': 'vim-binding.select-previous-cell-and-edit',
       'alt-enter': 'ipython.execute-and-insert-after',
       'ctrl-enter': 'ipython.execute-in-place',
       'shift-enter': 'ipython.run-select-next',
