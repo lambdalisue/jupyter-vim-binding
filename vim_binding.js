@@ -59,6 +59,9 @@ define([
     ns.notebook.command_mode();
     ns.notebook.focus_cell();
   };
+  var isInInsertMode = function isInInsertMode(cm) {
+    return cm && cm.state.vim.insertMode;
+  };
 
   // Extend Jupyter
   var ORIGINAL = Object.freeze({
@@ -149,6 +152,12 @@ define([
         var action = extend({}, km.actions._actions[name]);
         var handler = action.handler;
         action.handler = function(env, event) {
+          var cell = env.notebook.get_selected_cell();
+          if (cell && isInInsertMode(cell.code_mirror)) {
+            // CodeMirror is in InsertMode, prevent any Jupyter action in
+            // InsertMode and let CodeMirror to do things
+            return;
+          }
           var restore = env.notebook.mode === 'edit';
           env.notebook.command_mode();
           var result = handler(env, event);
@@ -240,6 +249,10 @@ define([
   km.actions.register({
     'help': 'scroll up',
     'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:scroll-up', event, env);
       env.notebook.edit_mode();
@@ -248,6 +261,10 @@ define([
   km.actions.register({
     'help': 'scroll down',
     'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:scroll-down', event, env);
       env.notebook.edit_mode();
@@ -256,6 +273,10 @@ define([
   km.actions.register({
     'help': 'select the first cell',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:select-first-cell', event, env);
       env.notebook.edit_mode();
@@ -264,6 +285,10 @@ define([
   km.actions.register({
     'help': 'select the last cell',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:select-last-cell', event, env);
       env.notebook.edit_mode();
@@ -272,6 +297,10 @@ define([
   km.actions.register({
     'help': 'expand output',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:expand-output', event, env);
       env.notebook.edit_mode();
@@ -280,6 +309,10 @@ define([
   km.actions.register({
     'help': 'expand all output',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:expand-all-output', event, env);
       env.notebook.edit_mode();
@@ -288,6 +321,10 @@ define([
   km.actions.register({
     'help': 'collapse output',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:collapse-output', event, env);
       env.notebook.edit_mode();
@@ -296,6 +333,10 @@ define([
   km.actions.register({
     'help': 'collapse all output',
     'handler': function(env) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       km.actions.call('vim-binding-normal:collapse-all-output', event, env);
       env.notebook.edit_mode();
@@ -305,6 +346,10 @@ define([
   km.actions.register({
     'help': 'extend selected cells above',
     'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       return km.actions.call(
         'jupyter-notebook:extend-selection-above', event, env
@@ -314,6 +359,10 @@ define([
   km.actions.register({
     'help': 'extend selected cells below',
     'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
       env.notebook.command_mode();
       return km.actions.call(
         'jupyter-notebook:extend-selection-below', event, env
