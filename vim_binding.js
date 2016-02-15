@@ -278,183 +278,81 @@ define([
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
-  if ((common_shortcuts.shift || '') === 'jupyter-notebook:ignore') {
-    km.edit_shortcuts.clear_shortcuts();
-    addShortcuts(km.edit_shortcuts, {
-      'ctrl-shift--': 'jupyter-notebook:split-cell-at-cursor',
-      'ctrl-shift-subtract': 'jupyter-notebook:split-cell-at-cursor',
-      'ctrl-j': 'vim-binding:select-next-cell-and-edit',
-      'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
-      'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-      'ctrl-enter': 'vim-binding:run-cell-and-edit',
-      'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
-      'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
-      'shift': 'jupyter-notebook:ignore',
-      'ctrl-s': 'jupyter-notebook:save-notebook',
-      'ctrl-1': 'vim-binding:change-cell-to-code-and-edit',
-      'ctrl-2': 'vim-binding:change-cell-to-markdown-and-edit',
-      'ctrl-3': 'vim-binding:change-cell-to-raw-and-edit',
-    });
+  km.edit_shortcuts.clear_shortcuts();
+  addShortcuts(km.edit_shortcuts, {
+    'ctrl-shift--': 'jupyter-notebook:split-cell-at-cursor',
+    'ctrl-shift-subtract': 'jupyter-notebook:split-cell-at-cursor',
+    'ctrl-j': 'vim-binding:select-next-cell-and-edit',
+    'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
+    'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
+    'ctrl-enter': 'vim-binding:run-cell-and-edit',
+    'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
+    'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
+    'shift': 'jupyter-notebook:ignore',
+    'ctrl-s': 'jupyter-notebook:save-notebook',
+    'ctrl-1': 'vim-binding:change-cell-to-code-and-edit',
+    'ctrl-2': 'vim-binding:change-cell-to-markdown-and-edit',
+    'ctrl-3': 'vim-binding:change-cell-to-raw-and-edit',
+  });
 
-    km.command_shortcuts.clear_shortcuts();
-    addShortcuts(km.command_shortcuts, {
-      'ctrl-c': 'jupyter-notebook:interrupt-kernel',
-      'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
-      'shift-o': 'jupyter-notebook:insert-cell-above',
-      'o': 'jupyter-notebook:insert-cell-below',
-      'y,y': 'jupyter-notebook:copy-cell',
-      'd,d': 'jupyter-notebook:cut-cell',
-      'shift-p': 'jupyter-notebook:paste-cell-above',
-      'p': 'jupyter-notebook:paste-cell-below',
-      'esc': 'jupyter-notebook:close-pager',
-      'q': 'jupyter-notebook:close-pager',
-      'enter': 'jupyter-notebook:enter-edit-mode',
-      'f': 'jupyter-notebook:find-and-replace',
-      'i': 'jupyter-notebook:enter-edit-mode',
-      'j': 'vim-binding:scroll-down',
-      'k': 'vim-binding:scroll-up',
-      'z,z': 'jupyter-notebook:scroll-cell-center',
-      'z,t': 'jupyter-notebook:scroll-cell-top',
-      'ctrl-j': 'jupyter-notebook:select-next-cell',
-      'ctrl-k': 'jupyter-notebook:select-previous-cell',
-      'shift-j': 'jupyter-notebook:extend-selection-below',
-      'shift-k': 'jupyter-notebook:extend-selection-above',
-      'shift-m': 'jupyter-notebook:merge-cells',
-      'ctrl-m': 'jupyter-notebook:merge-cell-with-next-cell',
-      'ctrl-shift-m': 'jupyter-notebook:merge-cell-with-previous-cell',
-      'g,g': 'vim-binding:select-first-cell',
-      'shift-g': 'vim-binding:select-last-cell',
-      'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
-      'ctrl-d': 'jupyter-notebook:scroll-notebook-down',
-      'u': 'jupyter-notebook:undo-cell-deletion',
-      'ctrl-1': 'jupyter-notebook:change-cell-to-code',
-      'ctrl-2': 'jupyter-notebook:change-cell-to-markdown',
-      'ctrl-3': 'jupyter-notebook:change-cell-to-raw',
-      'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
-      'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
-      'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
-      'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
-      'ctrl-s': 'jupyter-notebook:save-notebook',
-      'shift-r': 'jupyter-notebook:rename-notebook',
-      'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-      'ctrl-enter': 'jupyter-notebook:run-cell',
-      'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
-      'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
-      'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
-      'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
-      'z,m': 'vim-binding:collapse-output',
-      'z,shift-m': 'vim-binding:collapse-all-output',
-      'z,r': 'vim-binding:expand-output',
-      'z,shift-r': 'vim-binding:expand-all-output',
-      '0,0': 'jupyter-notebook:confirm-restart-kernel',
-      '1': 'jupyter-notebook:change-cell-to-heading-1',
-      '2': 'jupyter-notebook:change-cell-to-heading-2',
-      '3': 'jupyter-notebook:change-cell-to-heading-3',
-      '4': 'jupyter-notebook:change-cell-to-heading-4',
-      '5': 'jupyter-notebook:change-cell-to-heading-5',
-      '6': 'jupyter-notebook:change-cell-to-heading-6',
-    });
-  } else {
-    // For backward compatibility
-    km.actions.register({
-      'help': 'run all cells',
-      'help_index': 'bd',
-      'handler': function(env) {
-        env.notebook.execute_all_cells();
-      }
-    }, 'run-all-cells', 'vim-binding');
-    km.actions.register({
-      'handler': function(env) {
-        env.notebook.merge_cell_above();
-      }
-    }, 'merge-cell-with-previous-cell', 'vim-binding');
-    km.actions.register({
-      'help': 'Rename current notebook',
-      'handler': function(env) {
-        env.notebook.save_widget.rename_notebook({notebook: env.notebook});
-      }
-    }, 'rename-notebook', 'vim-binding');
-    km.actions.register({
-      'help': 'Toggle the hiddens state of all output areas',
-      'handler': function(env) {
-        env.notebook.toggle_all_output();
-      }
-    }, 'toggle-all-cells-output-collapsed', 'vim-binding');
-
-    km.edit_shortcuts.clear_shortcuts();
-    addShortcuts(km.edit_shortcuts, {
-      'ctrl-shift--': 'ipython.split-cell-at-cursor',
-      'ctrl-shift-subtract': 'ipython.split-cell-at-cursor',
-      'alt-enter': 'ipython.execute-and-insert-after',
-      'ctrl-enter': 'vim-binding.run-cell-and-edit',
-      'shift-enter': 'ipython.run-select-next',
-      'ctrl-shift-enter': 'vim-binding.run-all-cells',
-      'shift': 'ipython.ignore',
-      'ctrl-s': 'ipython.save-notebook',
-      'ctrl-1': 'vim-binding.change-cell-to-code-and-edit',
-      'ctrl-2': 'vim-binding.change-cell-to-markdown-and-edit',
-      'ctrl-3': 'vim-binding.change-cell-to-raw-and-edit',
-    });
-
-    km.command_shortcuts.clear_shortcuts();
-    addShortcuts(km.command_shortcuts, {
-      'ctrl-c': 'ipython.interrupt-kernel',
-      'cmdtrl-shift-p': 'ipython.show-command-palette',
-      'shift-o': 'ipython.insert-cell-before',
-      'o': 'ipython.insert-cell-after',
-      'y,y': 'ipython.copy-selected-cell',
-      'd,d': 'ipython.cut-selected-cell',
-      'shift-p': 'ipython.paste-cell-before',
-      'p': 'ipython.paste-cell-after',
-      'esc': 'ipython.close-pager',
-      'q': 'ipython.close-pager',
-      'enter': 'ipython.enter-edit-mode',
-      'f': 'ipython.find-and-replace',
-      'i': 'ipython.enter-edit-mode',
-      'j': 'vim-binding.scroll-down',
-      'k': 'vim-binding.scroll-up',
-      'z,z': 'ipython.scroll-cell-center',
-      'z,t': 'ipython.scroll-cell-top',
-      'ctrl-j': 'ipython.select-next-cell',
-      'ctrl-k': 'ipython.select-previous-cell',
-      'shift-j': 'ipython.extend-selection-below',
-      'shift-k': 'ipython.extend-selection-above',
-      'shift-m': 'ipython.merge-selected-cells',
-      'ctrl-m': 'ipython.merge-selected-cell-with-cell-after',
-      'ctrl-shift-m': 'vim-binding.merge-cell-with-previous-cell',
-      'g,g': 'vim-binding.select-first-cell',
-      'shift-g': 'vim-binding.select-last-cell',
-      'ctrl-u': 'ipython.scroll-up',
-      'ctrl-d': 'ipython.scroll-down',
-      'u': 'ipython.undo-last-cell-deletion',
-      'ctrl-1': 'ipython.change-selected-cell-to-code-cell',
-      'ctrl-2': 'ipython.change-selected-cell-to-markdown-cell',
-      'ctrl-3': 'ipython.change-selected-cell-to-raw-cell',
-      'shift-h': 'ipython.show-keyboard-shortcut-help-dialog',
-      'shift-l': 'ipython.toggle-line-number-selected-cell',
-      'shift-v': 'ipython.toggle-output-visibility-selected-cell',
-      'shift-s': 'ipython.toggle-output-scrolling-selected-cell',
-      'ctrl-s': 'ipython.save-notebook',
-      'shift-r': 'vim-binding.rename-notebook',
-      'alt-enter': 'ipython.execute-and-insert-after',
-      'ctrl-enter': 'ipython.execute-in-place',
-      'shift-enter': 'ipython.run-select-next',
-      'ctrl-shift-enter': 'vim-binding.run-all-cells',
-      'z,a': 'ipython.toggle-output-visibility-selected-cell',
-      'z,shift-a': 'vim-binding.toggle-all-cells-output-collapsed',
-      'z,m': 'vim-binding.collapse-output',
-      'z,shift-m': 'vim-binding.collapse-all-output',
-      'z,r': 'vim-binding.expand-output',
-      'z,shift-r': 'vim-binding.expand-all-output',
-      '0,0': 'ipython.restart-kernel',
-      '1': 'ipython.change-selected-cell-to-heading-1',
-      '2': 'ipython.change-selected-cell-to-heading-2',
-      '3': 'ipython.change-selected-cell-to-heading-3',
-      '4': 'ipython.change-selected-cell-to-heading-4',
-      '5': 'ipython.change-selected-cell-to-heading-5',
-      '6': 'ipython.change-selected-cell-to-heading-6',
-    });
-  }
+  km.command_shortcuts.clear_shortcuts();
+  addShortcuts(km.command_shortcuts, {
+    'ctrl-c': 'jupyter-notebook:interrupt-kernel',
+    'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
+    'shift-o': 'jupyter-notebook:insert-cell-above',
+    'o': 'jupyter-notebook:insert-cell-below',
+    'y,y': 'jupyter-notebook:copy-cell',
+    'd,d': 'jupyter-notebook:cut-cell',
+    'shift-p': 'jupyter-notebook:paste-cell-above',
+    'p': 'jupyter-notebook:paste-cell-below',
+    'esc': 'jupyter-notebook:close-pager',
+    'q': 'jupyter-notebook:close-pager',
+    'enter': 'jupyter-notebook:enter-edit-mode',
+    'f': 'jupyter-notebook:find-and-replace',
+    'i': 'jupyter-notebook:enter-edit-mode',
+    'j': 'vim-binding:scroll-down',
+    'k': 'vim-binding:scroll-up',
+    'z,z': 'jupyter-notebook:scroll-cell-center',
+    'z,t': 'jupyter-notebook:scroll-cell-top',
+    'ctrl-j': 'jupyter-notebook:select-next-cell',
+    'ctrl-k': 'jupyter-notebook:select-previous-cell',
+    'shift-j': 'jupyter-notebook:extend-selection-below',
+    'shift-k': 'jupyter-notebook:extend-selection-above',
+    'shift-m': 'jupyter-notebook:merge-cells',
+    'ctrl-m': 'jupyter-notebook:merge-cell-with-next-cell',
+    'ctrl-shift-m': 'jupyter-notebook:merge-cell-with-previous-cell',
+    'g,g': 'vim-binding:select-first-cell',
+    'shift-g': 'vim-binding:select-last-cell',
+    'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
+    'ctrl-d': 'jupyter-notebook:scroll-notebook-down',
+    'u': 'jupyter-notebook:undo-cell-deletion',
+    'ctrl-1': 'jupyter-notebook:change-cell-to-code',
+    'ctrl-2': 'jupyter-notebook:change-cell-to-markdown',
+    'ctrl-3': 'jupyter-notebook:change-cell-to-raw',
+    'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
+    'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
+    'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
+    'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
+    'ctrl-s': 'jupyter-notebook:save-notebook',
+    'shift-r': 'jupyter-notebook:rename-notebook',
+    'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
+    'ctrl-enter': 'jupyter-notebook:run-cell',
+    'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
+    'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
+    'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
+    'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
+    'z,m': 'vim-binding:collapse-output',
+    'z,shift-m': 'vim-binding:collapse-all-output',
+    'z,r': 'vim-binding:expand-output',
+    'z,shift-r': 'vim-binding:expand-all-output',
+    '0,0': 'jupyter-notebook:confirm-restart-kernel',
+    '1': 'jupyter-notebook:change-cell-to-heading-1',
+    '2': 'jupyter-notebook:change-cell-to-heading-2',
+    '3': 'jupyter-notebook:change-cell-to-heading-3',
+    '4': 'jupyter-notebook:change-cell-to-heading-4',
+    '5': 'jupyter-notebook:change-cell-to-heading-5',
+    '6': 'jupyter-notebook:change-cell-to-heading-6',
+  });
 
   // motion commands should jump to the next or previous cell
   // hence we patch CodeMirror's moveByLines method
