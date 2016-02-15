@@ -59,13 +59,6 @@ define([
     ns.notebook.command_mode();
     ns.notebook.focus_cell();
   };
-  var leaveInsertOrNormalMode = function leaveInsertOrNormalMode(cm) {
-    if (cm.state.vim.insertMode || cm.state.vim.visualMode) {
-      leaveInsertMode(cm);
-    } else {
-      leaveNormalMode(cm);
-    }
-  };
 
   // Extend Jupyter
   var ORIGINAL = Object.freeze({
@@ -148,58 +141,46 @@ define([
     manager.events.trigger('rebuild.QuickHelp');
   }
 
-  // Register custom actions
   var km = ns.keyboard_manager;
-  km.actions.register({
-    'help': 'execute cell and enter edit mode',
-    'help_index': 'zz',
-    'handler': function(env) {
-      env.notebook.command_mode();
-      env.notebook.execute_cell();
-      env.notebook.edit_mode();
+  // Register altrenative actions of jupyter-notebook
+  for (var name in km.actions._actions) {
+    if (name.match(/^jupyter-notebook:/)) {
+      var action = (function() {
+        var action = extend({}, km.actions._actions[name]);
+        var handler = action.handler;
+        action.handler = function(env, event) {
+          var restore = env.notebook.mode === 'edit';
+          env.notebook.command_mode();
+          var result = handler(env, event);
+          if (restore) env.notebook.edit_mode();
+          return result;
+        };
+        return action;
+      })();
+      km.actions.register(
+        action,
+        name.replace(/^jupyter-notebook:/, ''),
+        'vim-binding'
+      );
     }
-  }, 'run-cell-and-edit', 'vim-binding');
+  }
+  // vin-binding original actions (Command mode)
   km.actions.register({
-    'help': 'select a next cell and enter edit mode',
-    'help_index': 'zz',
+    'help': 'scroll up',
     'handler': function(env) {
-      env.notebook.select_next();
-      env.notebook.edit_mode();
-    }
-  }, 'select-next-cell-and-edit', 'vim-binding');
-  km.actions.register({
-    'help': 'select a previous cell and enter edit mode',
-    'help_index': 'zz',
-    'handler': function(env) {
-      env.notebook.select_prev();
-      env.notebook.edit_mode();
-    }
-  }, 'select-previous-cell-and-edit', 'vim-binding');
-  km.actions.register({
-    'help': 'select the first cell',
-    'help_index': 'zz',
-    'handler': function(env) {
-      var cells = env.notebook.get_cells();
-      if (cells.length > 0) {
-        cells[0].focus_cell();
+      var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
+      var site = document.querySelector('#site');
+      var prev = site.scrollTop;
+      site.scrollTop -= scrollUnit;
+      if (prev === site.scrollTop) {
+        env.notebook.select_prev();
+      } else {
+        selectClosestCell(env, 'up');
       }
-      return false;
     }
-  }, 'select-first-cell', 'vim-binding');
-  km.actions.register({
-    'help': 'select the last cell',
-    'help_index': 'zz',
-    'handler': function(env) {
-      var cells = env.notebook.get_cells();
-      if (cells.length > 0) {
-        cells[cells.length - 1].focus_cell();
-      }
-      return false;
-    }
-  }, 'select-last-cell', 'vim-binding');
+  }, 'scroll-up', 'vim-binding-normal');
   km.actions.register({
     'help': 'scroll down',
-    'help_index': 'zz',
     'handler': function(env) {
       // scroll down
       var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
@@ -211,140 +192,201 @@ define([
       } else {
         selectClosestCell(env, 'down');
       }
-      return false
     }
-  }, 'scroll-down', 'vim-binding');
+  }, 'scroll-down', 'vim-binding-normal');
   km.actions.register({
-    'help': 'scroll up',
-    'help_index': 'zz',
+    'help': 'select the first cell',
     'handler': function(env) {
-      var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
-      var site = document.querySelector('#site');
-      var prev = site.scrollTop;
-      site.scrollTop -= scrollUnit;
-      if (prev === site.scrollTop) {
-        env.notebook.select_prev();
-      } else {
-        selectClosestCell(env, 'up');
+      var cells = env.notebook.get_cells();
+      if (cells.length > 0) {
+        cells[0].focus_cell();
       }
-      return false;
     }
-  }, 'scroll-up', 'vim-binding');
+  }, 'select-first-cell', 'vim-binding-normal');
+  km.actions.register({
+    'help': 'select the last cell',
+    'handler': function(env) {
+      var cells = env.notebook.get_cells();
+      if (cells.length > 0) {
+        cells[cells.length - 1].focus_cell();
+      }
+    }
+  }, 'select-last-cell', 'vim-binding-normal');
   km.actions.register({
     'help': 'expand output',
     'handler': function(env) {
       env.notebook.expand_output();
     }
-  }, 'expand-output', 'vim-binding');
+  }, 'expand-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'expand all output',
     'handler': function(env) {
       env.notebook.expand_all_output();
     }
-  }, 'expand-all-output', 'vim-binding');
+  }, 'expand-all-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'collapse output',
     'handler': function(env) {
       env.notebook.collapse_output();
     }
-  }, 'collapse-output', 'vim-binding');
+  }, 'collapse-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'collapse all output',
     'handler': function(env) {
       env.notebook.collapse_all_output();
     }
+  }, 'collapse-all-output', 'vim-binding-normal');
+  // vim-binding original actions (Edit mode)
+  km.actions.register({
+    'help': 'scroll up',
+    'handler': function(env, event) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:scroll-up', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'scroll-up', 'vim-binding');
+  km.actions.register({
+    'help': 'scroll down',
+    'handler': function(env, event) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:scroll-down', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'scroll-down', 'vim-binding');
+  km.actions.register({
+    'help': 'select the first cell',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:select-first-cell', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'select-first-cell', 'vim-binding');
+  km.actions.register({
+    'help': 'select the last cell',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:select-last-cell', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'select-last-cell', 'vim-binding');
+  km.actions.register({
+    'help': 'expand output',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:expand-output', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'expand-output', 'vim-binding');
+  km.actions.register({
+    'help': 'expand all output',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:expand-all-output', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'expand-all-output', 'vim-binding');
+  km.actions.register({
+    'help': 'collapse output',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:collapse-output', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'collapse-output', 'vim-binding');
+  km.actions.register({
+    'help': 'collapse all output',
+    'handler': function(env) {
+      env.notebook.command_mode();
+      km.actions.call('vim-binding-normal:collapse-all-output', event, env);
+      env.notebook.edit_mode();
+    }
   }, 'collapse-all-output', 'vim-binding');
+  // jupyter-notebook actions which should call command_mode but edit_mode
   km.actions.register({
-    'handler': function(env) {
+    'help': 'extend selected cells above',
+    'handler': function(env, event) {
       env.notebook.command_mode();
-      env.notebook.to_code();
-      env.notebook.edit_mode();
+      return km.actions.call(
+        'jupyter-notebook:extend-selection-above', event, env
+      );
     }
-  }, 'change-cell-to-code-and-edit', 'vim-binding');
+  }, 'extend-selection-above', 'vim-binding');
   km.actions.register({
-    'handler': function(env) {
+    'help': 'extend selected cells below',
+    'handler': function(env, event) {
       env.notebook.command_mode();
-      env.notebook.to_markdown();
-      env.notebook.edit_mode();
+      return km.actions.call(
+        'jupyter-notebook:extend-selection-below', event, env
+      );
     }
-  }, 'change-cell-to-markdown-and-edit', 'vim-binding');
-  km.actions.register({
-    'handler': function(env) {
-      env.notebook.command_mode();
-      env.notebook.to_raw();
-      env.notebook.edit_mode();
-    }
-  }, 'change-cell-to-raw-and-edit', 'vim-binding');
+  }, 'extend-selection-below', 'vim-binding');
 
   // Assign custom Vim-like mappings
   var common_shortcuts = km.get_default_common_shortcuts();
   km.edit_shortcuts.clear_shortcuts();
   addShortcuts(km.edit_shortcuts, {
-    'ctrl-shift--': 'jupyter-notebook:split-cell-at-cursor',
-    'ctrl-shift-subtract': 'jupyter-notebook:split-cell-at-cursor',
-    'ctrl-j': 'vim-binding:select-next-cell-and-edit',
-    'ctrl-k': 'vim-binding:select-previous-cell-and-edit',
-    'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-    'ctrl-enter': 'vim-binding:run-cell-and-edit',
-    'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
-    'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
-    'shift': 'jupyter-notebook:ignore',
-    'ctrl-s': 'jupyter-notebook:save-notebook',
-    'ctrl-1': 'vim-binding:change-cell-to-code-and-edit',
-    'ctrl-2': 'vim-binding:change-cell-to-markdown-and-edit',
-    'ctrl-3': 'vim-binding:change-cell-to-raw-and-edit',
+    'F1': 'vim-binding:show-keyboard-shortcuts',
+    'shift': 'vim-binding:ignore',
+    'alt-enter': 'vim-binding:run-cell-and-insert-below',
+    'shift-enter': 'vim-binding:run-cell-and-select-next',
+    'cmdtrl-enter': 'vim-binding:run-cell',
+    'cmdtrl-shift-enter': 'vim-binding:run-all-cells',
+    'cmdtrl-1': 'vim-binding:change-cell-to-code',
+    'cmdtrl-2': 'vim-binding:change-cell-to-markdown',
+    'cmdtrl-3': 'vim-binding:change-cell-to-raw',
+    'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
+    // Repeat operations
+    'ctrl-y': 'vim-binding:scroll-up',
+    'ctrl-e': 'vim-binding:scroll-down',
+    'ctrl-k': 'vim-binding:select-previous-cell',
+    'ctrl-j': 'vim-binding:select-next-cell',
+    'ctrl-shift-k': 'vim-binding:extend-selection-above',
+    'ctrl-shift-j': 'vim-binding:extend-selection-below',
+    'ctrl-shift-u': 'vim-binding:scroll-notebook-up',
+    'ctrl-shift-d': 'vim-binding:scroll-notebook-down',
+    // Onetime operations (<C-o> is a prefix like <C-o> in Vim's insert mode)
+    'ctrl-o,g,g': 'vim-binding:select-first-cell',
+    'ctrl-o,shift-g': 'vim-binding:select-last-cell',
+    'ctrl-o,o': 'vim-binding:insert-cell-below',
+    'ctrl-o,shift-o': 'vim-binding:insert-cell-above',
+    'ctrl-o,z,z': 'vim-binding:scroll-cell-center',
+    'ctrl-o,z,t': 'vim-binding:scroll-cell-top',
+    'ctrl-o,shift-m': 'vim-binding:merge-cells',
+    'ctrl-o,-': 'vim-binding:split-cell-at-cursor',
+    'ctrl-o,subtract': 'vim-binding:split-cell-at-cursor',
+    'ctrl-o,y,y': 'vim-binding:copy-cell',
+    'ctrl-o,d,d': 'vim-binding:cut-cell',
+    'ctrl-o,shift-p': 'vim-binding:paste-cell-above',
+    'ctrl-o,p': 'vim-binding:paste-cell-below',
+    'ctrl-o,u': 'vim-binding:undo-cell-deletion',
+    'ctrl-o,/': 'jupyter-notebook:find-and-replace',
+    'ctrl-o,z,a': 'vim-binding:toggle-cell-output-collapsed',
+    'ctrl-o,z,shift-a': 'vim-binding:toggle-all-cells-output-collapsed',
+    'ctrl-o,z,m': 'vim-binding:collapse-output',
+    'ctrl-o,z,shift-m': 'vim-binding:collapse-all-output',
+    'ctrl-o,z,r': 'vim-binding:expand-output',
+    'ctrl-o,z,shift-r': 'vim-binding:expand-all-output',
+    'ctrl-o,shift-h': 'vim-binding:show-keyboard-shortcuts',
+    'ctrl-o,shift-l': 'vim-binding:toggle-cell-line-numbers',
+    'ctrl-o,shift-v': 'vim-binding:toggle-cell-output-collapsed',
+    'ctrl-o,shift-s': 'vim-binding:toggle-cell-output-scrolled',
+    'ctrl-o,ctrl-c': 'vim-binding:interrupt-kernel',
   });
 
   km.command_shortcuts.clear_shortcuts();
   addShortcuts(km.command_shortcuts, {
-    'ctrl-c': 'jupyter-notebook:interrupt-kernel',
-    'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
-    'shift-o': 'jupyter-notebook:insert-cell-above',
-    'o': 'jupyter-notebook:insert-cell-below',
-    'y,y': 'jupyter-notebook:copy-cell',
-    'd,d': 'jupyter-notebook:cut-cell',
-    'shift-p': 'jupyter-notebook:paste-cell-above',
-    'p': 'jupyter-notebook:paste-cell-below',
-    'esc': 'jupyter-notebook:close-pager',
+    'F1': 'jupyter-notebook:show-keyboard-shortcuts',
     'q': 'jupyter-notebook:close-pager',
-    'enter': 'jupyter-notebook:enter-edit-mode',
-    'f': 'jupyter-notebook:find-and-replace',
+    'esc': 'jupyter-notebook:close-pager',
     'i': 'jupyter-notebook:enter-edit-mode',
-    'j': 'vim-binding:scroll-down',
-    'k': 'vim-binding:scroll-up',
-    'z,z': 'jupyter-notebook:scroll-cell-center',
-    'z,t': 'jupyter-notebook:scroll-cell-top',
-    'ctrl-j': 'jupyter-notebook:select-next-cell',
-    'ctrl-k': 'jupyter-notebook:select-previous-cell',
-    'shift-j': 'jupyter-notebook:extend-selection-below',
-    'shift-k': 'jupyter-notebook:extend-selection-above',
-    'shift-m': 'jupyter-notebook:merge-cells',
-    'ctrl-m': 'jupyter-notebook:merge-cell-with-next-cell',
-    'ctrl-shift-m': 'jupyter-notebook:merge-cell-with-previous-cell',
-    'g,g': 'vim-binding:select-first-cell',
-    'shift-g': 'vim-binding:select-last-cell',
-    'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
-    'ctrl-d': 'jupyter-notebook:scroll-notebook-down',
-    'u': 'jupyter-notebook:undo-cell-deletion',
-    'ctrl-1': 'jupyter-notebook:change-cell-to-code',
-    'ctrl-2': 'jupyter-notebook:change-cell-to-markdown',
-    'ctrl-3': 'jupyter-notebook:change-cell-to-raw',
-    'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
-    'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
-    'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
-    'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
-    'ctrl-s': 'jupyter-notebook:save-notebook',
-    'shift-r': 'jupyter-notebook:rename-notebook',
+    'enter': 'jupyter-notebook:enter-edit-mode',
     'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-    'ctrl-enter': 'jupyter-notebook:run-cell',
     'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
-    'ctrl-shift-enter': 'jupyter-notebook:run-all-cells',
-    'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
-    'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
-    'z,m': 'vim-binding:collapse-output',
-    'z,shift-m': 'vim-binding:collapse-all-output',
-    'z,r': 'vim-binding:expand-output',
-    'z,shift-r': 'vim-binding:expand-all-output',
+    'cmdtrl-enter': 'jupyter-notebook:run-cell',
+    'cmdtrl-shift-enter': 'jupyter-notebook:run-all-cells',
+    'cmdtrl-1': 'jupyter-notebook:change-cell-to-code',
+    'cmdtrl-2': 'jupyter-notebook:change-cell-to-markdown',
+    'cmdtrl-3': 'jupyter-notebook:change-cell-to-raw',
     '0,0': 'jupyter-notebook:confirm-restart-kernel',
     '1': 'jupyter-notebook:change-cell-to-heading-1',
     '2': 'jupyter-notebook:change-cell-to-heading-2',
@@ -352,11 +394,55 @@ define([
     '4': 'jupyter-notebook:change-cell-to-heading-4',
     '5': 'jupyter-notebook:change-cell-to-heading-5',
     '6': 'jupyter-notebook:change-cell-to-heading-6',
+    'ctrl-s': 'jupyter-notebook:save-notebook',
+    'shift-r': 'jupyter-notebook:rename-notebook',
+    'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
+    // Repeat operations
+    'ctrl-y': 'jupyter-notebook:scroll-up',
+    'ctrl-e': 'jupyter-notebook:scroll-down',
+    'k': 'jupyter-notebook:select-previous-cell',
+    'j': 'jupyter-notebook:select-next-cell',
+    'ctrl-k': 'jupyter-notebook:select-previous-cell',
+    'ctrl-j': 'jupyter-notebook:select-next-cell',
+    'shift-k': 'jupyter-notebook:extend-selection-above',
+    'shift-j': 'jupyter-notebook:extend-selection-below',
+    'ctrl-shift-k': 'jupyter-notebook:extend-selection-above',
+    'ctrl-shift-j': 'jupyter-notebook:extend-selection-below',
+    'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
+    'ctrl-d': 'jupyter-notebook:scroll-notebook-down',
+    'ctrl-shift-u': 'jupyter-notebook:scroll-notebook-up',
+    'ctrl-shift-d': 'jupyter-notebook:scroll-notebook-down',
+    // Onetime operations
+    'g,g': 'vim-binding-normal:select-first-cell',
+    'shift-g': 'vim-binding-normal:select-last-cell',
+    'o': 'jupyter-notebook:insert-cell-below',
+    'cmdtrl-o': 'jupyter-notebook:insert-cell-below',
+    'z,z': 'jupyter-notebook:scroll-cell-center',
+    'z,t': 'jupyter-notebook:scroll-cell-top',
+    'shift-m': 'jupyter-notebook:merge-cells',
+    '-': 'jupyter-notebook:split-cell-at-cursor',
+    'subtract': 'jupyter-notebook:split-cell-at-cursor',
+    'y,y': 'jupyter-notebook:copy-cell',
+    'd,d': 'jupyter-notebook:cut-cell',
+    'shift-p': 'jupyter-notebook:paste-cell-above',
+    'p': 'jupyter-notebook:paste-cell-below',
+    'u': 'jupyter-notebook:undo-cell-deletion',
+    '/': 'jupyter-notebook:find-and-replace',
+    'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
+    'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
+    'z,m': 'jupyter-notebook:collapse-output',
+    'z,shift-m': 'jupyter-notebook:collapse-all-output',
+    'z,r': 'jupyter-notebook:expand-output',
+    'z,shift-r': 'jupyter-notebook:expand-all-output',
+    'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
+    'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
+    'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
+    'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
+    'ctrl-c': 'vim-binding:interrupt-kernel',
   });
 
   // motion commands should jump to the next or previous cell
   // hence we patch CodeMirror's moveByLines method
-
   var Pos = CodeMirror.Pos;
   // method is based on moveByLines from CodeMirror's Vim mode
   // @see: https://github.com/codemirror/CodeMirror/blob/master/keymap/vim.js#L1677 
@@ -411,7 +497,10 @@ define([
           if(current_cell != new_cell && !!new_cell){
               // reset cursor to top or end line 
               var cm2 = new_cell.code_mirror;
-              cm2.setCursor({ch: cm2.getCursor().ch, line: (line < first) ? cm2.lastLine(): cm2.firstLine()});
+              cm2.setCursor({
+                ch: cm2.getCursor().ch,
+                line: (line < first) ? cm2.lastLine(): cm2.firstLine()
+              });
               if(diff > 0){
                   var seq = "" + diff  + key;
                   for(var i=0; i<seq.length;i++){
@@ -433,11 +522,31 @@ define([
 
   // we remap the motion keys with our patched method
   CodeMirror.Vim.defineMotion("moveByLinesOrCell", moveByLinesOrCell);
-  CodeMirror.Vim.mapCommand("k", "motion", "moveByLinesOrCell", {forward: false, linewise: true }, {context: "normal"}); 
-  CodeMirror.Vim.mapCommand("j", "motion", "moveByLinesOrCell", {forward: true, linewise: true }, {context: "normal"});
-  CodeMirror.Vim.mapCommand("+", "motion", "moveByLinesOrCell", {forward: true, toFirstChar: true }, {context: "normal"});
-  CodeMirror.Vim.mapCommand("-", "motion", "moveByLinesOrCell", {forward: false, toFirstChar: true }, {context: "normal"});
-  CodeMirror.Vim.mapCommand("_", "motion", "moveByLinesOrCell", {forward: true, toFirstChar: true, repeatOffset: -1 }, {context: "normal"});
+  CodeMirror.Vim.mapCommand(
+    "k", "motion", "moveByLinesOrCell",
+    {forward: false, linewise: true },
+    {context: "normal"}
+  ); 
+  CodeMirror.Vim.mapCommand(
+    "j", "motion", "moveByLinesOrCell",
+    {forward: true, linewise: true },
+    {context: "normal"}
+  );
+  CodeMirror.Vim.mapCommand(
+    "+", "motion", "moveByLinesOrCell",
+    {forward: true, toFirstChar: true },
+    {context: "normal"}
+  );
+  CodeMirror.Vim.mapCommand(
+    "-", "motion", "moveByLinesOrCell",
+    {forward: false, toFirstChar: true },
+    {context: "normal"}
+  );
+  CodeMirror.Vim.mapCommand(
+    "_", "motion", "moveByLinesOrCell",
+    {forward: true, toFirstChar: true, repeatOffset: -1 },
+    {context: "normal"}
+  );
 
   var requireCSS = function(url) {
     var link = document.createElement('link');
@@ -455,7 +564,8 @@ define([
       var cm_config = cell.Cell.options_default.cm_config;
       cm_config.keyMap = 'vim';
       cm_config.extraKeys = extend(cm_config.extraKeys || {}, {
-        'Esc': leaveInsertOrNormalMode,
+        'Esc': leaveInsertMode,
+        'Shift-Esc': leaveNormalMode,
         'Ctrl-C': false,  // To enable clipboard copy
       });
 
