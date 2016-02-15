@@ -338,8 +338,8 @@ define([
     // Repeat operations
     'ctrl-y': 'vim-binding:scroll-up',
     'ctrl-e': 'vim-binding:scroll-down',
-    'ctrl-k': 'vim-binding:select-previous-cell',
-    'ctrl-j': 'vim-binding:select-next-cell',
+    'ctrl-k': 'vim-binding:select-previous-cell', // require C-k unmapping in CodeMirror
+    'ctrl-j': 'vim-binding:select-next-cell',     // require C-j unmapping in CodeMirror
     'ctrl-shift-k': 'vim-binding:extend-selection-above',
     'ctrl-shift-j': 'vim-binding:extend-selection-below',
     'ctrl-shift-u': 'vim-binding:scroll-notebook-up',
@@ -547,6 +547,8 @@ define([
     {forward: true, toFirstChar: true, repeatOffset: -1 },
     {context: "normal"}
   );
+  CodeMirror.Vim.map('<C-k>', '<Nop>', 'normal');
+  CodeMirror.Vim.map('<C-j>', '<Nop>', 'normal');
 
   var requireCSS = function(url) {
     var link = document.createElement('link');
