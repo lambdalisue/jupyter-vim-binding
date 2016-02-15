@@ -4,10 +4,10 @@
  * A vim key binding plugin for Jupyter/IPython
  *
  * @author    Alisue <lambdalisue@hashnote.net>
- * @version   0.1.0
+ * @version   2.0.0
  * @license   MIT license
  * @see       http://github.com/lambdalisue/jupyter-vim-binding
- * @copyright 2015, Alisue, hashnote.net
+ * @copyright 2015-2016, Alisue, hashnote.net
  *
  * Refs:
  *  - https://github.com/ivanov/ipython-vimception
@@ -494,77 +494,77 @@ define([
   // method is based on moveByLines from CodeMirror's Vim mode
   // @see: https://github.com/codemirror/CodeMirror/blob/master/keymap/vim.js#L1677 
   var moveByLinesOrCell = function(cm, head, motionArgs, vim){
-      var cur = head;
-      var endCh = cur.ch;
-      // TODO: these references will be undefined
-      // Depending what our last motion was, we may want to do different
-      // things. If our last motion was moving vertically, we want to
-      // preserve the HPos from our last horizontal move.  If our last motion
-      // was going to the end of a line, moving vertically we should go to
-      // the end of the line, etc.
-      switch (vim.lastMotion) {
-          case this.moveByLines:
-          case this.moveByDisplayLines:
-          case this.moveByScroll:
-          case this.moveToColumn:
-          case this.moveToEol:
-              // JUPYTER PATCH: add our custom method to the motion cases
-          case moveByLinesOrCell:
-              endCh = vim.lastHPos;
-              break;
-          default:
-              vim.lastHPos = endCh;
-      }
-      var repeat = motionArgs.repeat+(motionArgs.repeatOffset||0);
-      var line = motionArgs.forward ? cur.line + repeat : cur.line - repeat;
-      var first = cm.firstLine();
-      var last = cm.lastLine();
-      // Vim cancels linewise motions that start on an edge and move beyond
-      // that edge. It does not cancel motions that do not start on an edge.
+    var cur = head;
+    var endCh = cur.ch;
+    // TODO: these references will be undefined
+    // Depending what our last motion was, we may want to do different
+    // things. If our last motion was moving vertically, we want to
+    // preserve the HPos from our last horizontal move.  If our last motion
+    // was going to the end of a line, moving vertically we should go to
+    // the end of the line, etc.
+    switch (vim.lastMotion) {
+      case this.moveByLines:
+      case this.moveByDisplayLines:
+      case this.moveByScroll:
+      case this.moveToColumn:
+      case this.moveToEol:
+      // JUPYTER PATCH: add our custom method to the motion cases
+      case moveByLinesOrCell:
+        endCh = vim.lastHPos;
+        break;
+      default:
+        vim.lastHPos = endCh;
+    }
+    var repeat = motionArgs.repeat+(motionArgs.repeatOffset||0);
+    var line = motionArgs.forward ? cur.line + repeat : cur.line - repeat;
+    var first = cm.firstLine();
+    var last = cm.lastLine();
+    // Vim cancels linewise motions that start on an edge and move beyond
+    // that edge. It does not cancel motions that do not start on an edge.
 
-      // JUPYTER PATCH BEGIN
-      // here we insert the jumps to the next cells
-      if(line < first || line > last){
-          var current_cell = ns.notebook.get_selected_cell();
-          var diff = 0;
-          var key = '';
-          if (line < first) {
-              ns.notebook.select_prev();
-              diff = first - line;
-              key = 'k';
-          } else if(line > last) {
-              ns.notebook.select_next()
-              diff = line - last;
-              key = 'j';
-          }
-          ns.notebook.edit_mode();
-          // send remaining lines to next/prev cm instance
-          var new_cell = ns.notebook.get_selected_cell();
-          diff--; // we already jump one line
-          if(current_cell != new_cell && !!new_cell){
-              // reset cursor to top or end line 
-              var cm2 = new_cell.code_mirror;
-              cm2.setCursor({
-                ch: cm2.getCursor().ch,
-                line: (line < first) ? cm2.lastLine(): cm2.firstLine()
-              });
-              if(diff > 0){
-                  var seq = "" + diff  + key;
-                  for(var i=0; i<seq.length;i++){
-                      CodeMirror.Vim.handleKey(cm2, seq[i]);
-                  };
-              }
-          }
-          return;
+    // JUPYTER PATCH BEGIN
+    // here we insert the jumps to the next cells
+    if(line < first || line > last){
+      var current_cell = ns.notebook.get_selected_cell();
+      var diff = 0;
+      var key = '';
+      if (line < first) {
+        ns.notebook.select_prev();
+        diff = first - line;
+        key = 'k';
+      } else if(line > last) {
+        ns.notebook.select_next()
+        diff = line - last;
+        key = 'j';
       }
-      // JUPYTER PATCH END
+      ns.notebook.edit_mode();
+      // send remaining lines to next/prev cm instance
+      var new_cell = ns.notebook.get_selected_cell();
+      diff--; // we already jump one line
+      if(current_cell != new_cell && !!new_cell){
+        // reset cursor to top or end line 
+        var cm2 = new_cell.code_mirror;
+        cm2.setCursor({
+          ch: cm2.getCursor().ch,
+          line: (line < first) ? cm2.lastLine(): cm2.firstLine()
+        });
+        if(diff > 0){
+          var seq = "" + diff  + key;
+          for(var i=0; i<seq.length;i++){
+            CodeMirror.Vim.handleKey(cm2, seq[i]);
+          };
+        }
+      }
+      return;
+    }
+    // JUPYTER PATCH END
 
-      if (motionArgs.toFirstChar){
-          endCh=findFirstNonWhiteSpaceCharacter(cm.getLine(line));
-          vim.lastHPos = endCh;
-      }
-      vim.lastHSPos = cm.charCoords(Pos(line, endCh),'div').left;
-      return Pos(line, endCh);
+    if (motionArgs.toFirstChar){
+      endCh=findFirstNonWhiteSpaceCharacter(cm.getLine(line));
+      vim.lastHPos = endCh;
+    }
+    vim.lastHSPos = cm.charCoords(Pos(line, endCh),'div').left;
+    return Pos(line, endCh);
   };
 
   // we remap the motion keys with our patched method
