@@ -1,15 +1,34 @@
 # jupyter-vim-binding
+![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
-This extension enables VIM keybindings in [Jupyter Notebook](https://jupyter.org/) (4.0+), formerly known as [IPython Notebook](http://ipython.org/notebook.html).
+Do you use Vim? And you need to use [Jupyter Notebook]?
+This is a [Jupyter Notebook][] (formerly known as [IPython Notebook][]) extension to enable Vim like environment powered by [CodeMirror's Vim][].
+I'm sure that this plugin helps to improve your QOL.
 
-![Screencast](http://recordit.co/62sg2aC9cZ.gif)
+[Jupyter Notebook]: https://jupyter.org/
+[IPython Notebook]: http://ipython.org/notebook.html
+[CodeMirror's Vim]: https://codemirror.net/demo/vim.html
+[IPython-notebook-extensions]: https://github.com/ipython-contrib/IPython-notebook-extensions
 
-Since the development of [ivanov/ipython-vimception](https://github.com/ivanov/ipython-vimception) seems to have stalled, I decided to create a new one.
+<div align="center">
+![Screencast](http://g.recordit.co/apWN0VYYZb.gif)
+</div>
+
+This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
+For example
+
+- Jupyter has two modes, *Command* and *Edit* but this extension has three modes, *Jupyter mode*, *Command mode*, and *Insert mode*
+- Jupyter provides `<C-s>` to save a checkpoint but this extension eliminate that mapping while `:w` works same
+- Jupyter provides `<Shift-C>` and `<Shift-V>` to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste in Jupyter mode and `<C-o>yy` and `<C-o>p` in Vim mode.
+- A lot more.
 
 
 # Installation
 
-There are two ways to install the extension: 1. Directly as a notebook extension, or 2. By extending [IPython-notebook-extensions] (https://github.com/ipython-contrib/IPython-notebook-extensions)
+There are two ways to install the extension: 1. Directly as a notebook extension, or 2. By extending [IPython-notebook-extensions][].
+In this document, I will explain the first one only.
+See [How to install jupyter-vim-binding through IPython-notebook-extensions]() if you would like to use the plugin management interface of IPython-notebook-extensions.
+Actually, ... WIP
 
 ## Direct
 ### Get the file
