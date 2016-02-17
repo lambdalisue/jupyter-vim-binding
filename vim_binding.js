@@ -634,47 +634,47 @@ define([
   CodeMirror.Vim.defineMotion("moveByLinesOrCell", moveByLinesOrCell);
   CodeMirror.Vim.defineMotion("moveByDisplayLinesOrCell", moveByDisplayLinesOrCell);
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-k)", "motion", "moveByLinesOrCell",
+    "<Plug>(vim-binding-k)", "motion", "moveByLinesOrCell",
     {forward: false, linewise: true },
     {context: "normal"}
   ); 
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-j)", "motion", "moveByLinesOrCell",
+    "<Plug>(vim-binding-j)", "motion", "moveByLinesOrCell",
     {forward: true, linewise: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-gk)", "motion", "moveByDisplayLinesOrCell",
+    "<Plug>(vim-binding-gk)", "motion", "moveByDisplayLinesOrCell",
     {forward: false },
     {context: "normal"}
   ); 
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-gj)", "motion", "moveByDisplayLinesOrCell",
+    "<Plug>(vim-binding-gj)", "motion", "moveByDisplayLinesOrCell",
     {forward: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-+)", "motion", "moveByLinesOrCell",
+    "<Plug>(vim-binding-+)", "motion", "moveByLinesOrCell",
     {forward: true, toFirstChar: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter--)", "motion", "moveByLinesOrCell",
+    "<Plug>(vim-binding--)", "motion", "moveByLinesOrCell",
     {forward: false, toFirstChar: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "<Plug>(jupyter-_)", "motion", "moveByLinesOrCell",
+    "<Plug>(vim-binding-_)", "motion", "moveByLinesOrCell",
     {forward: true, toFirstChar: true, repeatOffset: -1 },
     {context: "normal"}
   );
-  CodeMirror.Vim.map('k', '<Plug>(jupyter-k)', 'normal');
-  CodeMirror.Vim.map('j', '<Plug>(jupyter-j)', 'normal');
-  CodeMirror.Vim.map('gk', '<Plug>(jupyter-gk)', 'normal');
-  CodeMirror.Vim.map('gj', '<Plug>(jupyter-gj)', 'normal');
-  CodeMirror.Vim.map('+', '<Plug>(jupyter-+)', 'normal');
-  CodeMirror.Vim.map('-', '<Plug>(jupyter--)', 'normal');
-  CodeMirror.Vim.map('_', '<Plug>(jupyter-_)', 'normal');
+  CodeMirror.Vim.map('k', '<Plug>(vim-binding-k)', 'normal');
+  CodeMirror.Vim.map('j', '<Plug>(vim-binding-j)', 'normal');
+  CodeMirror.Vim.map('gk', '<Plug>(vim-binding-gk)', 'normal');
+  CodeMirror.Vim.map('gj', '<Plug>(vim-binding-gj)', 'normal');
+  CodeMirror.Vim.map('+', '<Plug>(vim-binding-+)', 'normal');
+  CodeMirror.Vim.map('-', '<Plug>(vim-binding--)', 'normal');
+  CodeMirror.Vim.map('_', '<Plug>(vim-binding-_)', 'normal');
   CodeMirror.Vim.map('<C-k>', '<Nop>', 'normal');
   CodeMirror.Vim.map('<C-j>', '<Nop>', 'normal');
 
