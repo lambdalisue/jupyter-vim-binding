@@ -63,10 +63,10 @@ Customize
 
 To customize key mappings in *Vim mode*, you need to understand that there are two kinds of mappings in this extension:
 
-1. Mappings provided by [Jupyter][], users can customize this type of mappings with [Keyboard shortcut editor][] provided in [IPython notebook extensions][]
-2. Mappings provided by [CodeMirror.Vim][], users can customize this type of mappings with [`custom.js`][] as described below
+1. Mappings provided by [Jupyter Notebook][], users can customize this type of mappings with [Keyboard shortcut editor][] provided in [IPython-notebook-extensions][]
+2. Mappings provided by [CodeMirror's Vim][], users can customize this type of mappings with [`custom.js`][] as described below
 
-To customize mappings provided by [CodeMirror.Vim][], create a [`custom.js`][] at `~/.jupyter/custom/custom.js` (at least in Linux) and use [CodeMirror's Vim API][] to manipulate like:
+To customize mappings provided by [CodeMirror's Vim][], create a [`custom.js`][] at `~/.jupyter/custom/custom.js` (at least in Linux) and use [CodeMirror's Vim API][] to manipulate like:
 
 ```javascript
 // Configure CodeMirror
