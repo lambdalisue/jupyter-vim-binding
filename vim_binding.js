@@ -497,7 +497,7 @@ define([
   var Pos = CodeMirror.Pos;
   // method is based on moveByLines from CodeMirror's Vim mode
   // @see: https://github.com/codemirror/CodeMirror/blob/master/keymap/vim.js#L1677 
-  var moveByLinesOrCell = function(cm, head, motionArgs, vim){
+  var moveByLinesOrCell = function moveByLinesOrCell(cm, head, motionArgs, vim){
     var cur = head;
     var endCh = cur.ch;
     // TODO: these references will be undefined
@@ -519,7 +519,7 @@ define([
       default:
         vim.lastHPos = endCh;
     }
-    var repeat = motionArgs.repeat+(motionArgs.repeatOffset||0);
+    var repeat = motionArgs.repeat + (motionArgs.repeatOffset || 0);
     var line = motionArgs.forward ? cur.line + repeat : cur.line - repeat;
     var first = cm.firstLine();
     var last = cm.lastLine();
@@ -530,33 +530,28 @@ define([
     // here we insert the jumps to the next cells
     if(line < first || line > last){
       var current_cell = ns.notebook.get_selected_cell();
-      var diff = 0;
       var key = '';
-      if (line < first) {
-        ns.notebook.select_prev();
-        diff = first - line;
-        key = 'k';
-      } else if(line > last) {
-        ns.notebook.select_next()
-        diff = line - last;
+      if (motionArgs.forward) {
+        ns.notebook.select_next();
         key = 'j';
+      } else {
+        ns.notebook.select_prev();
+        key = 'k';
       }
       ns.notebook.edit_mode();
-      // send remaining lines to next/prev cm instance
       var new_cell = ns.notebook.get_selected_cell();
-      diff--; // we already jump one line
-      if(current_cell != new_cell && !!new_cell){
-        // reset cursor to top or end line 
+      if (current_cell !== new_cell && !!new_cell) {
+        // The selected cell has moved. Move the cursor at very end
         var cm2 = new_cell.code_mirror;
         cm2.setCursor({
-          ch: cm2.getCursor().ch,
-          line: (line < first) ? cm2.lastLine(): cm2.firstLine()
+          ch:   cm2.getCursor().ch,
+          line: motionArgs.forward ? cm2.firstLine() : cm2.lastLine()
         });
-        if(diff > 0){
-          var seq = "" + diff  + key;
-          for(var i=0; i<seq.length;i++){
-            CodeMirror.Vim.handleKey(cm2, seq[i]);
-          };
+        // Perform remaining repeats
+        repeat = motionArgs.forward ? line - last : first - line;
+        repeat -= 1;
+        if (Math.abs(repeat) > 0) {
+          CodeMirror.Vim.handleKey(cm2, repeat + key);  // e.g. 4j, 6k, etc.
         }
       }
       return;
@@ -564,10 +559,10 @@ define([
     // JUPYTER PATCH END
 
     if (motionArgs.toFirstChar){
-      endCh=findFirstNonWhiteSpaceCharacter(cm.getLine(line));
+      endCh = findFirstNonWhiteSpaceCharacter(cm.getLine(line));
       vim.lastHPos = endCh;
     }
-    vim.lastHSPos = cm.charCoords(Pos(line, endCh),'div').left;
+    vim.lastHSPos = cm.charCoords(Pos(line, endCh), 'div').left;
     return Pos(line, endCh);
   };
 
