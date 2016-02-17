@@ -12,7 +12,7 @@ I'm sure that this plugin helps to improve your QOL.
 [IPython-notebook-extensions]: https://github.com/ipython-contrib/IPython-notebook-extensions
 
 <div align="center">
-![Screencast](http://g.recordit.co/apWN0VYYZb.gif)
+  <img src="http://g.recordit.co/apWN0VYYZb.gif" alt="Screencast">
 </div>
 
 This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
