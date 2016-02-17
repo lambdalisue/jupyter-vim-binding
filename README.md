@@ -1,4 +1,5 @@
-# jupyter-vim-binding
+jupyter-vim-binding
+===============================================================================
 ![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
 Do you use Vim? And you need to use [Jupyter Notebook]?
@@ -17,95 +18,55 @@ I'm sure that this plugin helps to improve your QOL.
 This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
 For example
 
-- Jupyter has two modes, *Command* and *Edit* but this extension has three modes, *Jupyter mode*, *Command mode*, and *Insert mode*
-- Jupyter provides `<C-s>` to save a checkpoint but this extension eliminate that mapping while `:w` works same
-- Jupyter provides `<Shift-C>` and `<Shift-V>` to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste in Jupyter mode and `<C-o>yy` and `<C-o>p` in Vim mode.
+- Jupyter has two modes, *Command mode* and *Edit mode* but this extension has three modes, *Jupyter mode*, *Command mode*, and *Insert mode*
+- Jupyter provides `C` (`Shift-c`) and `V` (`Shift-v`) to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste cells
+- Jupyter provides `<C-s>` (`Ctrl-s`) to save a checkpoint but this extension eliminate that mapping while `:w` works same
 - A lot more.
 
 
-# Installation
+Installation
+-------------------------------------------------------------------------------
 
-There are two ways to install the extension: 1. Directly as a notebook extension, or 2. By extending [IPython-notebook-extensions][].
-In this document, I will explain the first one only.
-See [How to install jupyter-vim-binding through IPython-notebook-extensions]() if you would like to use the plugin management interface of IPython-notebook-extensions.
-Actually, ... WIP
-
-## Direct
-### Get the file
-(*Recommended*) Clone the repository in Jupyter's data directory by running the following from a shell (e.g., bash)
+There are several ways to install the extension, see [Installation](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Installation) for detail.
+The procedure below is a most simple one for quick use (**A recommended way is different from this. See the link above if you are beginner.**)
 
 ```bash
-> cd $(jupyter --data-dir)/nbextensions
-> git clone https://github.com/lambdalisue/jupyter-vim-binding.git vim_binding
+# Create required directory in case (optional)
+$ mkdir -p $(jupyter --data-dir)/nbextensions
+# Clone the repository
+$ cd $(jupyter --data-dir)/nbextensions
+$ git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
+# Activate the extension
+$ jupyter nbextension enable vim_binding/vim_binding
 ```
 
-*Or*, if you want to use Python interface for [Notebook Extensions](http://mindtrove.info/#nb-extensions), run the following from a Python shell or a Notebook
 
-```python
-from notebook.nbextensions import install_nbextension
-from jupyter_core.paths import jupyter_data_dir
-install_nbextension('https://rawgithub.com/lambdalisue/jupyter-vim-binding/master/vim_binding.js',
-                     nbextensions_dir=jupyter_data_dir()+'/nbextensions/vim_binding')
-```
+Usage
+-------------------------------------------------------------------------------
 
-*Or*, from a shell
+This extension provides *Jupyter mode* (For manipulating Jupyter) and *Vim mode* (For manipulating text).
+In *Vim mode*, there are *Command mode* and *Insert mode* like native Vim.
+Users can distinguish these mode by background color of the cell.
 
-```bash
-jupyter nbextension install https://rawgithub.com/lambdalisue/jupyter-vim-binding/master/vim_binding.js --nbextensions=$(jupyter --data-dir)/nbextensions/vim_binding
-```
+Key mappings are designed for Vimmer so probably you don't need to know much about the mapping but remember the followings to survive:
 
-**On Linux machines**, either command should create a new file under `~/.local/share/jupyter/nbextensions/vim_binding/vim_binding.js`.
-**On Mac**, this path should be `~/Library/Jupyter/nbextensions/vim_binding/vim_binding.js`.
+- All mappings are shown by hitting `<F1>`
+- Enter *Vim mode*; a super mode of *Command mode* and *Insert mode*; by 1) Double clicking a cell, 2) Hit `<Enter>` on a cell, or 3) Hit `i` on a cell
+- Leave *Vim mode* and re-enter *Jupyter mode* by hitting `<S-Esc>` (`Shift-Escape`), uncomfortable mapping on purpose
+- Enter *Insert mode* or leave *Insert mode* as like Vim (`i`, `a`, etc.)
 
-### Activate temporarily
-To activate the extension temporarily in a notebook session, run the following snippet in a code cell:
+You can find detail information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
 
-```javascript
-%%javascript
-Jupyter.utils.load_extensions('vim_binding/vim_binding')
-```
 
-### Activate permanently
-To activate the extension permanently from a notebook, run the following in a code cell:
+Customize
+-------------------------------------------------------------------------------
 
-```javascript
-%%javascript
-Jupyter.notebook.config.update({
-  'load_extensions': { 'vim_binding': true },
-});
-```
+To customize key mappings in *Vim mode*, you need to understand that there are two kinds of mappings in this extension:
 
-*Or*, from a shell
+1. Mappings provided by [Jupyter][], users can customize this type of mappings with [Keyboard shortcut editor][] provided in [IPython notebook extensions][]
+2. Mappings provided by [CodeMirror.Vim][], users can customize this type of mappings with [`custom.js`][] as described below
 
-```bash
-jupyter nbextension enable vim_binding/vim_binding
-```
-
-## Extending IPython-notebook-extensions
-[IPython-notebook-extensions](https://github.com/ipython-contrib/IPython-notebook-extensions) contains a collection of extensions that add functionality to the Jupyter notebook. These extensions are mostly written in Javascript and will be loaded locally in your Browser.
-
-The project simplifies the task of maintaining multiple extensions as, all extensions that are maintained and active have a markdown readme file for documentation and a yaml file to allow them being configured using the 'nbextensions' server extension.
-
-### Install IPython-notebook-extensions
-Follow the instructions at https://github.com/ipython-contrib/IPython-notebook-extensions#installation.
-In a nutshell, clone the repository and run `python setup.py install` to install as local user.
-
-### Add *vim_binding* to IPython-notebook-extensions
-Once you have installed IPython-notebook-extensions, run the following from a shell (e.g., bash):
-
-```bash
-> cd $(jupyter --data-dir)/nbextensions/usability
-> git clone https://github.com/lambdalisue/jupyter-vim-binding.git vim_binding
-> chmod -R go-w vim_binding
-```
-
-### Activate the extension
-Launch a Jupyter notebook session. Then, in a browser go to `<root>/nbextensions/`; for example, if the notebook is hosted under `localhost:8888`, go to `localhost:8888/nbextensions/`. Activate **VIM binding** from the list of extensions. Check [documentation](https://github.com/ipython-contrib/IPython-notebook-extensions#installation) for more details.
-
-# Customize
-
-To customize your Vim in Jupyter.
-Create a [`custom.js`](http://jdfreder-notebook.readthedocs.org/en/docs/examples/Notebook/JavaScript%20Notebook%20Extensions.html) (usually at `~/.jupyter/custom/custom.js`) and use [CodeMirror's Vim API](https://codemirror.net/doc/manual.html#vimapi) to configure like below:
+To customize mappings provided by [CodeMirror.Vim][], create a [`custom.js`][] at `~/.jupyter/custom/custom.js` (at least in Linux) and use [CodeMirror's Vim API][] to manipulate like:
 
 ```javascript
 // Configure CodeMirror
@@ -126,9 +87,7 @@ require(['base/js/namespace'], function(namespace) {
 });
 ```
 
-### Different cell background during normal or insert mode
-
-Create a your `custom.css` (usually at `~/.jupyter/custom/custom.css`) and configure the insert background like below:
+If you would like to customize the design, create a your `custom.css` at `~/.jupyter/custom/custom.css` (at least in Linux) like:
 
 ```css
 /* Jupyter cell is in normal mode when code mirror */
@@ -141,12 +100,19 @@ Create a your `custom.css` (usually at `~/.jupyter/custom/custom.css`) and confi
 }
 ```
 
+See [Customize](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Customize) to find useful snippets. Don't be afraid to share your snippets at that page ;-)
 
-# License
+[Keyboard shortcut editor]: https://github.com/ipython-contrib/IPython-notebook-extensions/tree/master/nbextensions/usability/keyboard_shortcut_editor
+[`custom.js`]: http://jdfreder-notebook.readthedocs.org/en/docs/examples/Notebook/JavaScript%20Notebook%20Extensions.html
+[CodeMirror's Vim API]: https://codemirror.net/doc/manual.html#vimapi
+
+
+License
+-------------------------------------------------------------------------------
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Alisue, hashnote.net
+Copyright (c) 2015-2016 Alisue, hashnote.net
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
