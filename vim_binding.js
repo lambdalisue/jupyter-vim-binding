@@ -20,10 +20,13 @@
 define([
   'require',
   'base/js/namespace',
+  'base/js/keyboard',
   'notebook/js/notebook',
   'notebook/js/cell',
+  'notebook/js/codecell',
+  'notebook/js/completer',
   'codemirror/keymap/vim'
-], function(require, ns, notebook, cell) {
+], function(require, ns, keyboard, notebook, cell, codecell, completer) {
   var undefined;
   var extend = function(destination, source) {
     for (var property in source) {
@@ -65,8 +68,16 @@ define([
 
   // Extend Jupyter
   var ORIGINAL = Object.freeze({
-    'handle_command_mode': notebook.Notebook.prototype.handle_command_mode,
-    'handle_edit_mode':    notebook.Notebook.prototype.handle_edit_mode
+    'Notebook': {
+      'handle_command_mode': notebook.Notebook.prototype.handle_command_mode,
+      'handle_edit_mode':    notebook.Notebook.prototype.handle_edit_mode
+    },
+    'Completer': {
+      'keydown':   completer.Completer.prototype.keydown
+    },
+    'CodeCell': {
+      'handle_codemirror_keyevent': codecell.CodeCell.prototype.handle_codemirror_keyevent
+    }
   });
 
   notebook.Notebook.prototype.handle_command_mode = function(cell) {
@@ -75,7 +86,7 @@ define([
       // command mode so do not leave Jupyter's edit mode in this case
       return;
     }
-    ORIGINAL.handle_command_mode.call(this, cell);
+    ORIGINAL.Notebook.handle_command_mode.call(this, cell);
   };
   var wasInInsertBeforeBlur = false;
   window.addEventListener('blur', function() {
@@ -91,8 +102,56 @@ define([
       leaveInsertMode(cell.code_mirror);
     }
     wasInInsertBeforeBlur = false;
-    ORIGINAL.handle_edit_mode.call(this, cell);
+    ORIGINAL.Notebook.handle_edit_mode.call(this, cell);
   };
+  completer.Completer.prototype.keydown = function(event) {
+    var keycodes = keyboard.keycodes;
+    var code = event.keyCode;
+    var ctrl = event.modifiers === undefined ? event.ctrlKey : event.modifiers & Event.CONTROL_MASK;
+    if (ctrl && (code === keycodes.n || code === keycodes.p)) {
+      // need to do that to be able to move the arrow
+      // when on the first or last line ofo a code cell
+      event.codemirrorIgnore = true;
+      event._ipkmIgnore = true;
+      event.preventDefault();
+
+      var options = this.sel.find('option');
+      var index = this.sel[0].selectedIndex;
+      if (code === keycodes.p) {
+        index--;
+      }
+      if (code === keycodes.n) {
+        index++;
+      }
+      index = Math.min(Math.max(index, 0), options.length-1);
+      this.sel[0].selectedIndex = index;
+    } else {
+      // Perform original keydown
+      ORIGINAL.Completer.keydown.call(this, event);
+    }
+  };
+  codecell.CodeCell.prototype.handle_codemirror_keyevent = function(editor, event) {
+    if (!this.completer.visible) {
+      // Completer is not shown so check if <C-n> or <C-p> is pressed
+      var keycodes = keyboard.keycodes;
+      var code = event.keyCode;
+      var ctrl = event.modifiers === undefined ? event.ctrlKey : event.modifiers & Event.CONTROL_MASK;
+      if (event.type === 'keydown' && (ctrl && (code === keycodes.n || code === keycodes.p))) {
+        this.tooltip.remove_and_cancel_tooltip();
+
+        // completion does not work on multicursor, it might be possible though in some cases
+        if (editor.somethingSelected() || editor.getSelections().length > 1) {
+          return false;
+        }
+        event.codemirrorIgnore = true;
+        event.preventDefault();
+        this.completer.startCompletion();
+        return true;
+      }
+    }
+    return ORIGINAL.CodeCell.handle_codemirror_keyevent.call(this, editor, event);
+  };
+
   var getElementBox = function getElementBox(element) {
     // We don't need left/right properties
     return {
@@ -356,6 +415,19 @@ define([
   }, 'extend-selection-above', 'vim-binding');
   km.actions.register({
     'help': 'extend selected cells below',
+    'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
+      env.notebook.command_mode();
+      return km.actions.call(
+        'jupyter-notebook:extend-selection-below', event, env
+      );
+    }
+  }, 'extend-selection-below', 'vim-binding');
+  km.actions.register({
+    'help': 'start completion',
     'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
