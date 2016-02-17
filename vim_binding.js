@@ -136,7 +136,20 @@ define([
       var keycodes = keyboard.keycodes;
       var code = event.keyCode;
       var ctrl = event.modifiers === undefined ? event.ctrlKey : event.modifiers & Event.CONTROL_MASK;
-      if (event.type === 'keydown' && (ctrl && (code === keycodes.n || code === keycodes.p))) {
+
+      if (event.type === 'keydown' && (ctrl && code === keycodes.g)) {
+        if (editor.somethingSelected() || editor.getSelections().length !== 1){
+          var anchor = editor.getCursor("anchor");
+          var head = editor.getCursor("head");
+          if( anchor.line !== head.line){
+            return false;
+          }
+        }
+        this.tooltip.request(this);
+        event.codemirrorIgnore = true;
+        event.preventDefault();
+        return true;
+      } else if (event.type === 'keydown' && (ctrl && (code === keycodes.n || code === keycodes.p))) {
         this.tooltip.remove_and_cancel_tooltip();
 
         // completion does not work on multicursor, it might be possible though in some cases
