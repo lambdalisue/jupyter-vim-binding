@@ -58,6 +58,22 @@ Key mappings are designed for Vimmer so probably you don't need to know much abo
 You can find detail information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
 
 
+Plug mappings
+-------------------------------------------------------------------------------
+
+jupyter-vim-binding provide the following `<Plug>` mappings for CodeMirror.
+
+- `<Plug>(vim-binding-j)` : `j` which move to the next cell at the cell side
+- `<Plug>(vim-binding-k)` : `k` which move to the previous cell at the cell side
+- `<Plug>(vim-binding-gj)` : `gj` which move to the next cell at the cell side
+- `<Plug>(vim-binding-gk)` : `gk` which move to the previous cell at the cell side
+- `<Plug>(vim-binding-+)` : `+` which move to the next cell at the cell side
+- `<Plug>(vim-binding--)` : `-` which move to the previous cell at the cell side
+- `<Plug>(vim-binding-_)` : `_` which move to the next cell at the cell side
+
+While CodeMirror's Vim does not provide `noremap` type of mappings.
+You need to use these `<Plug>` mappings to prevent infinity loop (See samples in Customize section).
+
 Customize
 -------------------------------------------------------------------------------
 
@@ -70,13 +86,18 @@ To customize mappings provided by [CodeMirror's Vim][], create a [`custom.js`][]
 
 ```javascript
 // Configure CodeMirror
-require(['codemirror/keymap/vim'], function() {
+require([
+  'nbextensions/vim_binding/vim_binding',   // depends your installation
+], function() {
   // Map jj to <Esc>
   CodeMirror.Vim.map("jj", "<Esc>", "insert");
-  // Use gj/gk instead of j/k
-  CodeMirror.Vim.map("j", "gj", "normal");
-  CodeMirror.Vim.map("k", "gk", "normal");
+  // Swap j/k and gj/gk (Note that <Plug> mappings)
+  CodeMirror.Vim.map("j", "<Plug>(vim-binding-gj)", "normal");
+  CodeMirror.Vim.map("k", "<Plug>(vim-binding-gk)", "normal");
+  CodeMirror.Vim.map("gj", "<Plug>(vim-binding-j)", "normal");
+  CodeMirror.Vim.map("gk", "<Plug>(vim-binding-k)", "normal");
 });
+
 // Configure Jupyter (VimBinding)
 require(['base/js/namespace'], function(namespace) {
   namespace.VimBinding = namespace.VimBinding || {};
