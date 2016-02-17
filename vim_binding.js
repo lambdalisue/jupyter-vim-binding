@@ -406,7 +406,6 @@ define([
     'ctrl-o,shift-p': 'vim-binding:paste-cell-above',
     'ctrl-o,p': 'vim-binding:paste-cell-below',
     'ctrl-o,u': 'vim-binding:undo-cell-deletion',
-    'ctrl-o,/': 'jupyter-notebook:find-and-replace',
     'ctrl-o,z,a': 'vim-binding:toggle-cell-output-collapsed',
     'ctrl-o,z,shift-a': 'vim-binding:toggle-all-cells-output-collapsed',
     'ctrl-o,z,m': 'vim-binding:collapse-output',
@@ -418,6 +417,9 @@ define([
     'ctrl-o,shift-v': 'vim-binding:toggle-cell-output-collapsed',
     'ctrl-o,shift-s': 'vim-binding:toggle-cell-output-scrolled',
     'ctrl-o,ctrl-c': 'vim-binding:interrupt-kernel',
+    // Defined in searchandreplace.js
+    // https://github.com/jupyter/notebook/blob/4.x/notebook/static/notebook/js/searchandreplace.js#L375
+    'ctrl-o,/': 'jupyter-notebook:find-and-replace',
   });
 
   km.command_shortcuts.clear_shortcuts();
@@ -441,12 +443,12 @@ define([
     '4': 'jupyter-notebook:change-cell-to-heading-4',
     '5': 'jupyter-notebook:change-cell-to-heading-5',
     '6': 'jupyter-notebook:change-cell-to-heading-6',
-    'ctrl-s': 'jupyter-notebook:save-notebook',
+    'cmdtrl-s': 'jupyter-notebook:save-notebook',
     'shift-r': 'jupyter-notebook:rename-notebook',
     'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
     // Repeat operations
-    'ctrl-y': 'jupyter-notebook:scroll-up',
-    'ctrl-e': 'jupyter-notebook:scroll-down',
+    'ctrl-y': 'vim-binding-normal:scroll-up',
+    'ctrl-e': 'vim-binding-normal:scroll-down',
     'k': 'jupyter-notebook:select-previous-cell',
     'j': 'jupyter-notebook:select-next-cell',
     'ctrl-k': 'jupyter-notebook:select-previous-cell',
@@ -463,7 +465,7 @@ define([
     'g,g': 'vim-binding-normal:select-first-cell',
     'shift-g': 'vim-binding-normal:select-last-cell',
     'o': 'jupyter-notebook:insert-cell-below',
-    'cmdtrl-o': 'jupyter-notebook:insert-cell-below',
+    'ctrl-o': 'jupyter-notebook:insert-cell-below',
     'z,z': 'jupyter-notebook:scroll-cell-center',
     'z,t': 'jupyter-notebook:scroll-cell-top',
     'shift-m': 'jupyter-notebook:merge-cells',
@@ -474,18 +476,20 @@ define([
     'shift-p': 'jupyter-notebook:paste-cell-above',
     'p': 'jupyter-notebook:paste-cell-below',
     'u': 'jupyter-notebook:undo-cell-deletion',
-    '/': 'jupyter-notebook:find-and-replace',
     'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
     'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
-    'z,m': 'jupyter-notebook:collapse-output',
-    'z,shift-m': 'jupyter-notebook:collapse-all-output',
-    'z,r': 'jupyter-notebook:expand-output',
-    'z,shift-r': 'jupyter-notebook:expand-all-output',
+    'z,m': 'vim-binding-normal:collapse-output',
+    'z,shift-m': 'vim-binding-normal:collapse-all-output',
+    'z,r': 'vim-binding-normal:expand-output',
+    'z,shift-r': 'vim-binding-normal:expand-all-output',
     'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
     'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
     'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
     'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
-    'ctrl-c': 'vim-binding:interrupt-kernel',
+    'cmdtrl-c': 'jupyter-notebook:interrupt-kernel',
+    // Defined in searchandreplace.js
+    // https://github.com/jupyter/notebook/blob/4.x/notebook/static/notebook/js/searchandreplace.js#L375
+    '/': 'jupyter-notebook:find-and-replace',
   });
 
   // motion commands should jump to the next or previous cell
