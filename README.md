@@ -12,7 +12,7 @@ I'm sure that this plugin helps to improve your QOL.
 [IPython-notebook-extensions]: https://github.com/ipython-contrib/IPython-notebook-extensions
 
 <div align="center">
-  <img src="http://g.recordit.co/apWN0VYYZb.gif" alt="Screencast">
+  <img src="resource/screencast.gif" alt="Screencast">
 </div>
 
 This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
@@ -58,10 +58,27 @@ Key mappings are designed for Vimmer so probably you don't need to know much abo
 You can find detail information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
 
 
+Completion and Tooltip
+-------------------------------------------------------------------------------
+
+jupyter-vim-binding supports `<C-n>`/`<C-p>` completion and `<C-g>` tooltip in a code cell (not in markdown / raw cell).
+These mappings are not listed in a help panel, due to a technical limitation.
+
+When user hit `<C-n>` or `<C-p>`, a completion panel like below will be shown.
+Once the completion panel is shown, users can select a candidate by `<C-n>`/`<C-p>` and apply by `<Enter>` or cancel by `<Esc>`.
+
+![Completion](resource/completion.png)
+
+When user hit `<C-g>`, a tooltip panel like below will be shown.
+The tooltip will disappear when users perform some actions like hitting a key.
+
+![Tooltip](resource/tooltip.png)
+
+
 Plug mappings
 -------------------------------------------------------------------------------
 
-jupyter-vim-binding provide the following `<Plug>` mappings for CodeMirror.
+jupyter-vim-binding provides the following `<Plug>` mappings for CodeMirror.
 
 - `<Plug>(vim-binding-j)` : `j` which move to the next cell at the cell side
 - `<Plug>(vim-binding-k)` : `k` which move to the previous cell at the cell side
@@ -73,6 +90,7 @@ jupyter-vim-binding provide the following `<Plug>` mappings for CodeMirror.
 
 While CodeMirror's Vim does not provide `noremap` type of mappings.
 You need to use these `<Plug>` mappings to prevent infinity loop (See samples in Customize section).
+
 
 Customize
 -------------------------------------------------------------------------------
