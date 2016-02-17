@@ -574,30 +574,35 @@ define([
   // we remap the motion keys with our patched method
   CodeMirror.Vim.defineMotion("moveByLinesOrCell", moveByLinesOrCell);
   CodeMirror.Vim.mapCommand(
-    "k", "motion", "moveByLinesOrCell",
+    "<Plug>(jupyter-k)", "motion", "moveByLinesOrCell",
     {forward: false, linewise: true },
     {context: "normal"}
   ); 
   CodeMirror.Vim.mapCommand(
-    "j", "motion", "moveByLinesOrCell",
+    "<Plug>(jupyter-j)", "motion", "moveByLinesOrCell",
     {forward: true, linewise: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "+", "motion", "moveByLinesOrCell",
+    "<Plug>(jupyter-+)", "motion", "moveByLinesOrCell",
     {forward: true, toFirstChar: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "-", "motion", "moveByLinesOrCell",
+    "<Plug>(jupyter--)", "motion", "moveByLinesOrCell",
     {forward: false, toFirstChar: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
-    "_", "motion", "moveByLinesOrCell",
+    "<Plug>(jupyter-_)", "motion", "moveByLinesOrCell",
     {forward: true, toFirstChar: true, repeatOffset: -1 },
     {context: "normal"}
   );
+  CodeMirror.Vim.map('k', '<Plug>(jupyter-k)', 'normal');
+  CodeMirror.Vim.map('j', '<Plug>(jupyter-j)', 'normal');
+  CodeMirror.Vim.map('+', '<Plug>(jupyter-+)', 'normal');
+  CodeMirror.Vim.map('-', '<Plug>(jupyter--)', 'normal');
+  CodeMirror.Vim.map('_', '<Plug>(jupyter-_)', 'normal');
   CodeMirror.Vim.map('<C-k>', '<Nop>', 'normal');
   CodeMirror.Vim.map('<C-j>', '<Nop>', 'normal');
 
