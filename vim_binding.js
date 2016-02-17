@@ -565,9 +565,74 @@ define([
     vim.lastHSPos = cm.charCoords(Pos(line, endCh), 'div').left;
     return Pos(line, endCh);
   };
+  var moveByDisplayLinesOrCell = function moveByDisplayLinesOrCell(cm, head, motionArgs, vim) {
+    var cur = head;
+    switch (vim.lastMotion) {
+      case this.moveByDisplayLines:
+      case this.moveByScroll:
+      case this.moveByLines:
+      case this.moveToColumn:
+      case this.moveToEol:
+      // JUPYTER PATCH
+      case moveByDisplayLinesOrCell:
+        break;
+      default:
+        vim.lastHSPos = cm.charCoords(cur, 'div').left;
+    }
+    var repeat = motionArgs.repeat;
+    var res = cm.findPosV(
+      cur, (motionArgs.forward ? repeat : -repeat), 'line', vim.lastHSPos
+    );
+
+    // JUPYTER PATCH BEGIN
+    if (res.hitSide) {
+      var current_cell = ns.notebook.get_selected_cell();
+      var key = '';
+      if (motionArgs.forward) {
+        ns.notebook.select_next();
+        key = 'gj';
+      } else {
+        ns.notebook.select_prev();
+        key = 'gk';
+      }
+      ns.notebook.edit_mode();
+      var new_cell = ns.notebook.get_selected_cell();
+      if (current_cell !== new_cell && !!new_cell) {
+        // The selected cell has moved. Move the cursor at very end
+        var cm2 = new_cell.code_mirror;
+        cm2.setCursor({
+          ch:   cm2.getCursor().ch,
+          line: motionArgs.forward ? cm2.firstLine() : cm2.lastLine()
+        });
+        // Perform remaining repeats
+        repeat = repeat - Math.abs(res.line - cur.line);
+        repeat -= 1;
+        if (repeat > 0) {
+          CodeMirror.Vim.handleKey(cm2, repeat + key);  // e.g. 4j, 6k, etc.
+        }
+        return;
+      }
+    }
+    // JUPYTER PATCH END
+
+    if (res.hitSide) {
+      if (motionArgs.forward) {
+        var lastCharCoords = cm.charCoords(res, 'div');
+        var goalCoords = { top: lastCharCoords.top + 8, left: vim.lastHSPos };
+        res = cm.coordsChar(goalCoords, 'div');
+      } else {
+        var resCoords = cm.charCoords(Pos(cm.firstLine(), 0), 'div');
+        resCoords.left = vim.lastHSPos;
+        res = cm.coordsChar(resCoords, 'div');
+      }
+    }
+    vim.lastHPos = res.ch;
+    return res;
+  };
 
   // we remap the motion keys with our patched method
   CodeMirror.Vim.defineMotion("moveByLinesOrCell", moveByLinesOrCell);
+  CodeMirror.Vim.defineMotion("moveByDisplayLinesOrCell", moveByDisplayLinesOrCell);
   CodeMirror.Vim.mapCommand(
     "<Plug>(jupyter-k)", "motion", "moveByLinesOrCell",
     {forward: false, linewise: true },
@@ -576,6 +641,16 @@ define([
   CodeMirror.Vim.mapCommand(
     "<Plug>(jupyter-j)", "motion", "moveByLinesOrCell",
     {forward: true, linewise: true },
+    {context: "normal"}
+  );
+  CodeMirror.Vim.mapCommand(
+    "<Plug>(jupyter-gk)", "motion", "moveByDisplayLinesOrCell",
+    {forward: false },
+    {context: "normal"}
+  ); 
+  CodeMirror.Vim.mapCommand(
+    "<Plug>(jupyter-gj)", "motion", "moveByDisplayLinesOrCell",
+    {forward: true },
     {context: "normal"}
   );
   CodeMirror.Vim.mapCommand(
@@ -595,6 +670,8 @@ define([
   );
   CodeMirror.Vim.map('k', '<Plug>(jupyter-k)', 'normal');
   CodeMirror.Vim.map('j', '<Plug>(jupyter-j)', 'normal');
+  CodeMirror.Vim.map('gk', '<Plug>(jupyter-gk)', 'normal');
+  CodeMirror.Vim.map('gj', '<Plug>(jupyter-gj)', 'normal');
   CodeMirror.Vim.map('+', '<Plug>(jupyter-+)', 'normal');
   CodeMirror.Vim.map('-', '<Plug>(jupyter--)', 'normal');
   CodeMirror.Vim.map('_', '<Plug>(jupyter-_)', 'normal');
