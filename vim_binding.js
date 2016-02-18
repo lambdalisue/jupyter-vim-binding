@@ -189,42 +189,6 @@ define([
     return ORIGINAL.CodeCell.handle_codemirror_keyevent.call(this, editor, event);
   };
 
-  var getElementBox = function getElementBox(element) {
-    // We don't need left/right properties
-    return {
-      'top':    element.offsetTop,
-      'bottom': element.offsetTop + element.clientHeight
-    };
-  };
-  var selectClosestCell = function selectClosestCell(env, direction) {
-      var margin = ns.VimBinding.closestCellMargin || CONST.CLOSEST_CELL_MARGIN;
-      var site = document.querySelector('#site');
-      var elems = env.notebook.get_cell_elements();
-      var index = env.notebook.get_selected_index();
-      var viewport = {
-        'top':    site.scrollTop,
-        'bottom': site.scrollTop + (site.clientHeight - site.offsetTop)
-      };
-      var box = getElementBox(elems[index]);
-      if (box.bottom - margin < viewport.top && direction !== 'up') {
-        for (var i=index; i<elems.length; i++) {
-          var nextBox = getElementBox(elems[i]);
-          if (nextBox.top >= viewport.top) {
-            env.notebook.select(i);
-            return;
-          }
-        }
-      } else if(box.top + margin > viewport.bottom && direction !== 'down') {
-        for (var i=index; i>=0; i--) {
-          var prevBox = getElementBox(elems[i]);
-          if (prevBox.bottom <= viewport.bottom) {
-            env.notebook.select(i);
-            return;
-          }
-        }
-      }
-  };
-
   // soft-failing shortcut helper - works around the hard-failing shortcut
   // manager in IPython
   var addShortcuts = function addShortcuts(manager, data){
@@ -277,26 +241,15 @@ define([
       var site = document.querySelector('#site');
       var prev = site.scrollTop;
       site.scrollTop -= scrollUnit;
-      if (prev === site.scrollTop) {
-        env.notebook.select_prev();
-      } else {
-        selectClosestCell(env, 'up');
-      }
     }
   }, 'scroll-up', 'vim-binding-normal');
   km.actions.register({
     'help': 'scroll down',
     'handler': function(env, event) {
-      // scroll down
       var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
       var site = document.querySelector('#site');
       var prev = site.scrollTop;
       site.scrollTop += scrollUnit;
-      if (prev === site.scrollTop) {
-        env.notebook.select_next();
-      } else {
-        selectClosestCell(env, 'down');
-      }
     }
   }, 'scroll-down', 'vim-binding-normal');
   km.actions.register({
