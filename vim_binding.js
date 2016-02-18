@@ -248,7 +248,7 @@ define([
   // vin-binding original actions (Command mode)
   km.actions.register({
     'help': 'scroll up',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
       var site = document.querySelector('#site');
       var prev = site.scrollTop;
@@ -262,7 +262,7 @@ define([
   }, 'scroll-up', 'vim-binding-normal');
   km.actions.register({
     'help': 'scroll down',
-    'handler': function(env) {
+    'handler': function(env, event) {
       // scroll down
       var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
       var site = document.querySelector('#site');
@@ -277,7 +277,7 @@ define([
   }, 'scroll-down', 'vim-binding-normal');
   km.actions.register({
     'help': 'select the first cell',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cells = env.notebook.get_cells();
       if (cells.length > 0) {
         cells[0].focus_cell();
@@ -286,7 +286,7 @@ define([
   }, 'select-first-cell', 'vim-binding-normal');
   km.actions.register({
     'help': 'select the last cell',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cells = env.notebook.get_cells();
       if (cells.length > 0) {
         cells[cells.length - 1].focus_cell();
@@ -295,25 +295,25 @@ define([
   }, 'select-last-cell', 'vim-binding-normal');
   km.actions.register({
     'help': 'expand output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       env.notebook.expand_output();
     }
   }, 'expand-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'expand all output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       env.notebook.expand_all_output();
     }
   }, 'expand-all-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'collapse output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       env.notebook.collapse_output();
     }
   }, 'collapse-output', 'vim-binding-normal');
   km.actions.register({
     'help': 'collapse all output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       env.notebook.collapse_all_output();
     }
   }, 'collapse-all-output', 'vim-binding-normal');
@@ -342,7 +342,7 @@ define([
   }, 'scroll-down', 'vim-binding');
   km.actions.register({
     'help': 'select the first cell',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
@@ -354,7 +354,7 @@ define([
   }, 'select-first-cell', 'vim-binding');
   km.actions.register({
     'help': 'select the last cell',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
@@ -366,7 +366,7 @@ define([
   }, 'select-last-cell', 'vim-binding');
   km.actions.register({
     'help': 'expand output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
@@ -378,7 +378,7 @@ define([
   }, 'expand-output', 'vim-binding');
   km.actions.register({
     'help': 'expand all output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
@@ -390,7 +390,7 @@ define([
   }, 'expand-all-output', 'vim-binding');
   km.actions.register({
     'help': 'collapse output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
@@ -402,7 +402,7 @@ define([
   }, 'collapse-output', 'vim-binding');
   km.actions.register({
     'help': 'collapse all output',
-    'handler': function(env) {
+    'handler': function(env, event) {
       var cell = env.notebook.get_selected_cell();
       if (cell && isInInsertMode(cell.code_mirror)) {
         return;
