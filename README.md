@@ -146,6 +146,35 @@ See [Customize](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Customiz
 [CodeMirror's Vim API]: https://codemirror.net/doc/manual.html#vimapi
 
 
+Limitation
+-------------------------------------------------------------------------------
+
+jupyter-vim-binding has following technical limitation.
+If anybody know about a confirmed workaround for these limitations, let me know.
+
+### Google Chrome
+
+Google Chrome prohibits javascript to override several key mappings such as `Ctrl-N`, `Ctrl-T`, etc.
+Because of this policy, users have no chance to use default key mappings of jupyter-vim-binding such as `<C-n>` completion.
+
+- https://code.google.com/p/chromium/issues/detail?id=33056
+- http://stackoverflow.com/questions/15911785/overriding-shortcut-keys-in-firefox-and-chrome
+- https://github.com/liftoff/GateOne/issues/290
+
+### Clipboard
+
+Most of modern browsers prohibit javascript to access a system clipboard without user action such as clicking a button.
+Because of this, there is no chance to enable copy and paste through `yy`, `dd`, or `p` while HTML5 clipboard object cannot be retrieved in a `keydown` event or so on.
+So Users need to use browser default mappings such as `Ctrl-C`, `Ctrl-V` if they want to copy and paste through a system clipboard.
+
+The followings are clipboard library for javascript but all of them require `click` event or no paste support.
+
+- https://github.com/zeroclipboard/zeroclipboard
+- https://clipboardjs.com/
+
+What we need is a `clipboard` object which can used for copy and paste in a `keydown` event rather than `click` event.
+
+
 License
 -------------------------------------------------------------------------------
 

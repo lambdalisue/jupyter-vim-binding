@@ -26,6 +26,7 @@ Please confirm the following before reporting an issue:
    version (and maybe one or two below) is supported
 2. Confirm the behavior in [CodeMirror.Vim][]. If the issue is reproducible
    even in [CodeMirror.Vim][] then the issue belongs to the [CodeMirror.Vim][]
+3. Confirm if the behavior is listed in [Limitation](README.md#Limitation).
 
 [CodeMirror.Vim]: https://codemirror.net/demo/vim.html
 
