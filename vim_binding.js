@@ -68,6 +68,9 @@ define([
 
   // Extend Jupyter
   var ORIGINAL = Object.freeze({
+    'ShortcutManager': {
+      'call_handler': keyboard.ShortcutManager.prototype.call_handler
+    },
     'Notebook': {
       'handle_command_mode': notebook.Notebook.prototype.handle_command_mode,
       'handle_edit_mode':    notebook.Notebook.prototype.handle_edit_mode
@@ -80,6 +83,27 @@ define([
     }
   });
 
+  keyboard.ShortcutManager.prototype.call_handler = function(event) {
+    // NOTE:
+    // It seems at least Jupyter 4.1 in Firefox has a bug in the following
+    // internal function and that's why 'ctrl-o,shift-o' type mapping did not
+    // work.
+    // So override the function and mimic a correct behaviour
+    // NOTE:
+    // At least in Firefox, event.altKey || event.ctrlKey || ... fail when
+    // only a modifier key is pressed (everything become false and only key
+    // shows a correct modifier pressed).
+    var only_modifier_event = function(event){
+      var key = keyboard.inv_keycodes[event.which];
+      return (key === 'alt'|| key === 'ctrl'|| key === 'meta'|| key === 'shift');
+    };
+
+    this.clearsoon();
+    if(only_modifier_event(event)){
+      return true;
+    }
+    return ORIGINAL.ShortcutManager.call_handler.call(this, event);
+  };
   notebook.Notebook.prototype.handle_command_mode = function(cell) {
     if (document.querySelector('.CodeMirror-dialog')) {
       // .CodeMirror-dialog exists, mean that user hit ':' to enter Vim's
