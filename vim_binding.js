@@ -235,6 +235,32 @@ define([
   }
   // vin-binding original actions (Command mode)
   km.actions.register({
+    'help': 'scroll notebook up',
+    'handler': function(env, event) {
+      // Page scroll is a bit buggy and slow so replace it to faster one.
+      // If the scroll-speed is fast enough, I think we actually don't need
+      // to scroll exactly one page
+      var repeat = 20;
+      while (repeat) {
+        km.actions.call('vim-binding-normal:scroll-up', event, env);
+        repeat--;
+      }
+    }
+  }, 'scroll-notebook-up', 'vim-binding-normal');
+  km.actions.register({
+    'help': 'scroll notebook down',
+    'handler': function(env, event) {
+      // Page scroll is a bit buggy and slow so replace it to faster one.
+      // If the scroll-speed is fast enough, I think we actually don't need
+      // to scroll exactly one page
+      var repeat = 20;
+      while (repeat) {
+        km.actions.call('vim-binding-normal:scroll-down', event, env);
+        repeat--;
+      }
+    }
+  }, 'scroll-notebook-down', 'vim-binding-normal');
+  km.actions.register({
     'help': 'scroll up',
     'handler': function(env, event) {
       var scrollUnit = ns.VimBinding.scrollUnit || defaultConfig.scrollUnit;
@@ -295,6 +321,28 @@ define([
     }
   }, 'collapse-all-output', 'vim-binding-normal');
   // vim-binding original actions (Edit mode)
+  km.actions.register({
+    'help': 'scroll notebook up',
+    'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
+      km.actions.call('vim-binding-normal:scroll-notebook-up', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'scroll-notebook-up', 'vim-binding');
+  km.actions.register({
+    'help': 'scroll notebook down',
+    'handler': function(env, event) {
+      var cell = env.notebook.get_selected_cell();
+      if (cell && isInInsertMode(cell.code_mirror)) {
+        return;
+      }
+      km.actions.call('vim-binding-normal:scroll-notebook-down', event, env);
+      env.notebook.edit_mode();
+    }
+  }, 'scroll-notebook-down', 'vim-binding');
   km.actions.register({
     'help': 'scroll up',
     'handler': function(env, event) {
@@ -519,10 +567,10 @@ define([
     'shift-j': 'jupyter-notebook:extend-selection-below',
     'ctrl-shift-k': 'jupyter-notebook:extend-selection-above',
     'ctrl-shift-j': 'jupyter-notebook:extend-selection-below',
-    'ctrl-u': 'jupyter-notebook:scroll-notebook-up',
-    'ctrl-d': 'jupyter-notebook:scroll-notebook-down',
-    'ctrl-shift-u': 'jupyter-notebook:scroll-notebook-up',
-    'ctrl-shift-d': 'jupyter-notebook:scroll-notebook-down',
+    'ctrl-u': 'vim-binding-normal:scroll-notebook-up',
+    'ctrl-d': 'vim-binding-normal:scroll-notebook-down',
+    'ctrl-shift-u': 'vim-binding-normal:scroll-notebook-up',
+    'ctrl-shift-d': 'vim-binding-normal:scroll-notebook-down',
     // Onetime operations
     'g,g': 'vim-binding-normal:select-first-cell',
     'shift-g': 'vim-binding-normal:select-last-cell',
