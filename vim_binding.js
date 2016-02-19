@@ -486,7 +486,7 @@ define([
     'shift': 'vim-binding:ignore',
     'alt-enter': 'vim-binding:run-cell-and-insert-below',
     'shift-enter': 'vim-binding:run-cell-and-select-next',
-    'cmdtrl-enter': 'jupyter-notebook:run-cell',  // this should leave cell to render Markdown
+    'cmdtrl-enter': 'vim-binding:run-cell',
     'cmdtrl-shift-enter': 'vim-binding:run-all-cells',
     'cmdtrl-1': 'vim-binding:change-cell-to-code',
     'cmdtrl-2': 'vim-binding:change-cell-to-markdown',
