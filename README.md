@@ -6,6 +6,13 @@ This extension enables VIM keybindings in [Jupyter Notebook](https://jupyter.org
 
 Since the development of [ivanov/ipython-vimception](https://github.com/ivanov/ipython-vimception) seems to have stalled, I decided to create a new one.
 
+# Usage
+Once installed and activated ([see below](#installation)), you can see all of the new bindings using the `<F1>` (or `shift-H`) keys:
+
+![F1-help example](https://cloud.githubusercontent.com/assets/200/13184805/91643054-d703-11e5-8e84-1992fa15da24.png)
+
+These bindings can easily be changed ([see ‘Customization’](#customization)) to suit your needs.
+
 
 # Installation
 
@@ -83,7 +90,7 @@ Once you have installed IPython-notebook-extensions, run the following from a sh
 ### Activate the extension
 Launch a Jupyter notebook session. Then, in a browser go to `<root>/nbextensions/`; for example, if the notebook is hosted under `localhost:8888`, go to `localhost:8888/nbextensions/`. Activate **VIM binding** from the list of extensions. Check [documentation](https://github.com/ipython-contrib/IPython-notebook-extensions#installation) for more details.
 
-# Customize
+# Customization
 
 To customize your Vim in Jupyter.
 Create a [`custom.js`](http://jdfreder-notebook.readthedocs.org/en/docs/examples/Notebook/JavaScript%20Notebook%20Extensions.html) (usually at `~/.jupyter/custom/custom.js`) and use [CodeMirror's Vim API](https://codemirror.net/doc/manual.html#vimapi) to configure like below:
