@@ -89,10 +89,10 @@ jupyter-vim-binding provides the following `<Plug>` mappings for CodeMirror.
 - `<Plug>(vim-binding-_)` : `_` which move to the next cell at the cell side
 
 While CodeMirror's Vim does not provide `noremap` type of mappings.
-You need to use these `<Plug>` mappings to prevent infinity loop (See samples in Customize section).
+You need to use these `<Plug>` mappings to prevent infinity loop (See samples in Customization section).
 
 
-Customize
+Customization
 -------------------------------------------------------------------------------
 
 To customize key mappings in *Vim mode*, you need to understand that there are two kinds of mappings in this extension:
@@ -139,7 +139,7 @@ If you would like to customize the design, create a your `custom.css` at `~/.jup
 }
 ```
 
-See [Customize](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Customize) to find useful snippets. Don't be afraid to share your snippets at that page ;-)
+See [Customization](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Customization) to find useful snippets. Don't be afraid to share your snippets at that page ;-)
 
 [Keyboard shortcut editor]: https://github.com/ipython-contrib/IPython-notebook-extensions/tree/master/nbextensions/usability/keyboard_shortcut_editor
 [`custom.js`]: http://jdfreder-notebook.readthedocs.org/en/docs/examples/Notebook/JavaScript%20Notebook%20Extensions.html
