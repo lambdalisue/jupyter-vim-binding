@@ -45,8 +45,8 @@ define([
     'CLOSEST_CELL_MARGIN': 30
   });
   ns.VimBinding = extend({
-      'scrollUnit':        CONST.SCROLL_UNIT,
-      'closestCellMargin': CONST.CLOSEST_CELL_MARGIN
+    'scrollUnit':        CONST.SCROLL_UNIT,
+    'closestCellMargin': CONST.CLOSEST_CELL_MARGIN
   }, ns.VimBinding || {});
 
   //
@@ -532,75 +532,75 @@ define([
     'ctrl-o,/': 'jupyter-notebook:find-and-replace',
   });
 
-  km.command_shortcuts.clear_shortcuts();
-  addShortcuts(km.command_shortcuts, {
-    'F1': 'jupyter-notebook:show-keyboard-shortcuts',
-    'q': 'jupyter-notebook:close-pager',
-    'esc': 'jupyter-notebook:close-pager',
-    'i': 'jupyter-notebook:enter-edit-mode',
-    'enter': 'jupyter-notebook:enter-edit-mode',
-    'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
-    'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
-    'cmdtrl-enter': 'jupyter-notebook:run-cell',
-    'cmdtrl-shift-enter': 'jupyter-notebook:run-all-cells',
-    'cmdtrl-1': 'jupyter-notebook:change-cell-to-code',
-    'cmdtrl-2': 'jupyter-notebook:change-cell-to-markdown',
-    'cmdtrl-3': 'jupyter-notebook:change-cell-to-raw',
-    '0,0': 'jupyter-notebook:confirm-restart-kernel',
-    '1': 'jupyter-notebook:change-cell-to-heading-1',
-    '2': 'jupyter-notebook:change-cell-to-heading-2',
-    '3': 'jupyter-notebook:change-cell-to-heading-3',
-    '4': 'jupyter-notebook:change-cell-to-heading-4',
-    '5': 'jupyter-notebook:change-cell-to-heading-5',
-    '6': 'jupyter-notebook:change-cell-to-heading-6',
-    'cmdtrl-s': 'jupyter-notebook:save-notebook',
-    'shift-r': 'jupyter-notebook:rename-notebook',
-    'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
-    // Repeat operations
-    'ctrl-y': 'vim-binding-normal:scroll-up',
-    'ctrl-e': 'vim-binding-normal:scroll-down',
-    'k': 'jupyter-notebook:select-previous-cell',
-    'j': 'jupyter-notebook:select-next-cell',
-    'ctrl-k': 'jupyter-notebook:select-previous-cell',
-    'ctrl-j': 'jupyter-notebook:select-next-cell',
-    'shift-k': 'jupyter-notebook:extend-selection-above',
-    'shift-j': 'jupyter-notebook:extend-selection-below',
-    'ctrl-shift-k': 'jupyter-notebook:extend-selection-above',
-    'ctrl-shift-j': 'jupyter-notebook:extend-selection-below',
-    'ctrl-u': 'vim-binding-normal:scroll-notebook-up',
-    'ctrl-d': 'vim-binding-normal:scroll-notebook-down',
-    'ctrl-shift-u': 'vim-binding-normal:scroll-notebook-up',
-    'ctrl-shift-d': 'vim-binding-normal:scroll-notebook-down',
-    // Onetime operations
-    'g,g': 'vim-binding-normal:select-first-cell',
-    'shift-g': 'vim-binding-normal:select-last-cell',
-    'o': 'jupyter-notebook:insert-cell-below',
-    'ctrl-o': 'jupyter-notebook:insert-cell-below',
-    'z,z': 'jupyter-notebook:scroll-cell-center',
-    'z,t': 'jupyter-notebook:scroll-cell-top',
-    'shift-m': 'jupyter-notebook:merge-cells',
-    '-': 'jupyter-notebook:split-cell-at-cursor',
-    'subtract': 'jupyter-notebook:split-cell-at-cursor',
-    'y,y': 'jupyter-notebook:copy-cell',
-    'd,d': 'jupyter-notebook:cut-cell',
-    'shift-p': 'jupyter-notebook:paste-cell-above',
-    'p': 'jupyter-notebook:paste-cell-below',
-    'u': 'jupyter-notebook:undo-cell-deletion',
-    'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
-    'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
-    'z,m': 'vim-binding-normal:collapse-output',
-    'z,shift-m': 'vim-binding-normal:collapse-all-output',
-    'z,r': 'vim-binding-normal:expand-output',
-    'z,shift-r': 'vim-binding-normal:expand-all-output',
-    'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
-    'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
-    'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
-    'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
-    'cmdtrl-c': 'jupyter-notebook:interrupt-kernel',
-    // Defined in searchandreplace.js
-    // https://github.com/jupyter/notebook/blob/4.x/notebook/static/notebook/js/searchandreplace.js#L375
-    '/': 'jupyter-notebook:find-and-replace',
-  });
+km.command_shortcuts.clear_shortcuts();
+addShortcuts(km.command_shortcuts, {
+  'F1': 'jupyter-notebook:show-keyboard-shortcuts',
+  'q': 'jupyter-notebook:close-pager',
+  'esc': 'jupyter-notebook:close-pager',
+  'i': 'jupyter-notebook:enter-edit-mode',
+  'enter': 'jupyter-notebook:enter-edit-mode',
+  'alt-enter': 'jupyter-notebook:run-cell-and-insert-below',
+  'shift-enter': 'jupyter-notebook:run-cell-and-select-next',
+  'cmdtrl-enter': 'jupyter-notebook:run-cell',
+  'cmdtrl-shift-enter': 'jupyter-notebook:run-all-cells',
+  'cmdtrl-1': 'jupyter-notebook:change-cell-to-code',
+  'cmdtrl-2': 'jupyter-notebook:change-cell-to-markdown',
+  'cmdtrl-3': 'jupyter-notebook:change-cell-to-raw',
+  '0,0': 'jupyter-notebook:confirm-restart-kernel',
+  '1': 'jupyter-notebook:change-cell-to-heading-1',
+  '2': 'jupyter-notebook:change-cell-to-heading-2',
+  '3': 'jupyter-notebook:change-cell-to-heading-3',
+  '4': 'jupyter-notebook:change-cell-to-heading-4',
+  '5': 'jupyter-notebook:change-cell-to-heading-5',
+  '6': 'jupyter-notebook:change-cell-to-heading-6',
+  'cmdtrl-s': 'jupyter-notebook:save-notebook',
+  'shift-r': 'jupyter-notebook:rename-notebook',
+  'cmdtrl-shift-p': 'jupyter-notebook:show-command-palette',
+  // Repeat operations
+  'ctrl-y': 'vim-binding-normal:scroll-up',
+  'ctrl-e': 'vim-binding-normal:scroll-down',
+  'k': 'jupyter-notebook:select-previous-cell',
+  'j': 'jupyter-notebook:select-next-cell',
+  'ctrl-k': 'jupyter-notebook:select-previous-cell',
+  'ctrl-j': 'jupyter-notebook:select-next-cell',
+  'shift-k': 'jupyter-notebook:extend-selection-above',
+  'shift-j': 'jupyter-notebook:extend-selection-below',
+  'ctrl-shift-k': 'jupyter-notebook:extend-selection-above',
+  'ctrl-shift-j': 'jupyter-notebook:extend-selection-below',
+  'ctrl-u': 'vim-binding-normal:scroll-notebook-up',
+  'ctrl-d': 'vim-binding-normal:scroll-notebook-down',
+  'ctrl-shift-u': 'vim-binding-normal:scroll-notebook-up',
+  'ctrl-shift-d': 'vim-binding-normal:scroll-notebook-down',
+  // Onetime operations
+  'g,g': 'vim-binding-normal:select-first-cell',
+  'shift-g': 'vim-binding-normal:select-last-cell',
+  'o': 'jupyter-notebook:insert-cell-below',
+  'ctrl-o': 'jupyter-notebook:insert-cell-below',
+  'z,z': 'jupyter-notebook:scroll-cell-center',
+  'z,t': 'jupyter-notebook:scroll-cell-top',
+  'shift-m': 'jupyter-notebook:merge-cells',
+  '-': 'jupyter-notebook:split-cell-at-cursor',
+  'subtract': 'jupyter-notebook:split-cell-at-cursor',
+  'y,y': 'jupyter-notebook:copy-cell',
+  'd,d': 'jupyter-notebook:cut-cell',
+  'shift-p': 'jupyter-notebook:paste-cell-above',
+  'p': 'jupyter-notebook:paste-cell-below',
+  'u': 'jupyter-notebook:undo-cell-deletion',
+  'z,a': 'jupyter-notebook:toggle-cell-output-collapsed',
+  'z,shift-a': 'jupyter-notebook:toggle-all-cells-output-collapsed',
+  'z,m': 'vim-binding-normal:collapse-output',
+  'z,shift-m': 'vim-binding-normal:collapse-all-output',
+  'z,r': 'vim-binding-normal:expand-output',
+  'z,shift-r': 'vim-binding-normal:expand-all-output',
+  'shift-h': 'jupyter-notebook:show-keyboard-shortcuts',
+  'shift-l': 'jupyter-notebook:toggle-cell-line-numbers',
+  'shift-v': 'jupyter-notebook:toggle-cell-output-collapsed',
+  'shift-s': 'jupyter-notebook:toggle-cell-output-scrolled',
+  'cmdtrl-c': 'jupyter-notebook:interrupt-kernel',
+  // Defined in searchandreplace.js
+  // https://github.com/jupyter/notebook/blob/4.x/notebook/static/notebook/js/searchandreplace.js#L375
+  '/': 'jupyter-notebook:find-and-replace',
+});
 
   // motion commands should jump to the next or previous cell
   // hence we patch CodeMirror's moveByLines method
@@ -618,11 +618,11 @@ define([
     // the end of the line, etc.
     switch (vim.lastMotion) {
       case this.moveByLines:
-      case this.moveByDisplayLines:
-      case this.moveByScroll:
-      case this.moveToColumn:
+    case this.moveByDisplayLines:
+  case this.moveByScroll:
+case this.moveToColumn:
       case this.moveToEol:
-      // JUPYTER PATCH: add our custom method to the motion cases
+        // JUPYTER PATCH: add our custom method to the motion cases
       case moveByLinesOrCell:
         endCh = vim.lastHPos;
         break;
@@ -679,11 +679,11 @@ define([
     var cur = head;
     switch (vim.lastMotion) {
       case this.moveByDisplayLines:
-      case this.moveByScroll:
-      case this.moveByLines:
-      case this.moveToColumn:
+    case this.moveByScroll:
+  case this.moveByLines:
+case this.moveToColumn:
       case this.moveToEol:
-      // JUPYTER PATCH
+        // JUPYTER PATCH
       case moveByDisplayLinesOrCell:
         break;
       default:
@@ -809,18 +809,18 @@ define([
         'Ctrl-C': false,  // To enable clipboard copy
       });
 
-      // Apply default CodeMirror config to existing CodeMirror instances
-      ns.notebook.get_cells().map(function(cell) {
-        var cm = cell.code_mirror;
-        if (cm) {
-          cm.setOption('keyMap', cm_config.keyMap);
-          cm.setOption('extraKeys', extend(
-            cm.getOption('extraKeys') || {},
-            cm_config.extraKeys
-          ));
-        }
-      });
+    // Apply default CodeMirror config to existing CodeMirror instances
+    ns.notebook.get_cells().map(function(cell) {
+      var cm = cell.code_mirror;
+      if (cm) {
+        cm.setOption('keyMap', cm_config.keyMap);
+        cm.setOption('extraKeys', extend(
+          cm.getOption('extraKeys') || {},
+          cm_config.extraKeys
+        ));
+      }
+    });
     },
   };
-  return exports;
+return exports;
 });
