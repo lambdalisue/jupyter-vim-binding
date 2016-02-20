@@ -115,15 +115,6 @@ require([
   CodeMirror.Vim.map("gj", "<Plug>(vim-binding-j)", "normal");
   CodeMirror.Vim.map("gk", "<Plug>(vim-binding-k)", "normal");
 });
-
-// Configure Jupyter (VimBinding)
-require(['base/js/namespace'], function(namespace) {
-  namespace.VimBinding = namespace.VimBinding || {};
-  // Regulate scroll speed (default: 30)
-  namespace.VimBinding.scrollUnit = 100;
-  // Regulate offset (default: 30)
-  namespace.VimBinding.closestCellMargin = 5;
-});
 ```
 
 If you would like to customize the design, create a your `custom.css` at `~/.jupyter/custom/custom.css` (at least in Linux) like:
@@ -173,6 +164,7 @@ The followings are clipboard library for javascript but all of them require `cli
 - https://clipboardjs.com/
 
 What we need is a `clipboard` object which can used for copy and paste in a `keydown` event rather than `click` event.
+However, I don't know any workaround for this so it is impossible to perform copy and paste in `yy` or `p` for now.
 
 
 License
