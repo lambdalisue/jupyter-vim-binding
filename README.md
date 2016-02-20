@@ -74,6 +74,8 @@ The tooltip will disappear when users perform some actions like hitting a key.
 
 ![Tooltip](resource/tooltip.png)
 
+Note that you can repeat `<C-g>` to make the tooltip larger (more informations).
+
 
 Plug mappings
 -------------------------------------------------------------------------------
