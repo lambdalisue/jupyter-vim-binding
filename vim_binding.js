@@ -4,7 +4,7 @@
  * A vim key binding plugin for Jupyter/IPython
  *
  * @author    Alisue <lambdalisue@hashnote.net>
- * @version   2.0.2
+ * @version   2.0.3
  * @license   MIT license
  * @see       http://github.com/lambdalisue/jupyter-vim-binding
  * @copyright 2015-2016, Alisue, hashnote.net
