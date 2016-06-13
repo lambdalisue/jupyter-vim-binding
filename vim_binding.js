@@ -29,6 +29,7 @@ define([
   './lib/jupyter/keyboard',
   './lib/jupyter/notebook',
   './lib/jupyter/shortcuts',
+  './lib/jupyter/quickhelp',
 ], function(require, $, config, ns, utils, cell) {
   "use strict";
   var undefined;
