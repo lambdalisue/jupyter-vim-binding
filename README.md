@@ -1,6 +1,6 @@
 jupyter-vim-binding
 ===============================================================================
-![Version 2.0.2](https://img.shields.io/badge/version-2.0.3-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
+![Version 2.0.4](https://img.shields.io/badge/version-2.0.4-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
 Do you use Vim? And you need to use [Jupyter Notebook]?
 This is a [Jupyter Notebook][] (formerly known as [IPython Notebook][]) extension to enable Vim like environment powered by [CodeMirror's Vim][].
@@ -18,7 +18,7 @@ I'm sure that this plugin helps to improve your QOL.
 This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
 For example
 
-- Jupyter has two modes, *Command mode* and *Edit mode* but this extension has three modes, *Jupyter mode*, *Command mode*, and *Insert mode*
+- Jupyter has two modes, *Command mode* and *Edit mode* but this extension has three modes, *Jupyter mode*, *Vim command mode*, and *Insert mode*
 - Jupyter provides `C` (`Shift-c`) and `V` (`Shift-v`) to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste cells
 - Jupyter provides `<C-s>` (`Ctrl-s`) to save a checkpoint but this extension eliminate that mapping while `:w` works same
 - A lot more.
@@ -51,7 +51,7 @@ Users can distinguish these mode by background color of the cell.
 Key mappings are designed for Vimmer so probably you don't need to know much about the mapping but remember the followings to survive:
 
 - All mappings are shown by hitting `<F1>`
-- Enter *Vim mode*; a super mode of *Command mode* and *Insert mode*; by 1) Double clicking a cell, 2) Hit `<Enter>` on a cell, or 3) Hit `i` on a cell
+- Enter *Vim mode*; a super mode of *Vim command mode* and *Insert mode*; by 1) Double clicking a cell, 2) Hit `<Enter>` on a cell, or 3) Hit `i` on a cell
 - Leave *Vim mode* and re-enter *Jupyter mode* by hitting `<S-Esc>` (`Shift-Escape`), uncomfortable mapping on purpose
 - Enter *Insert mode* or leave *Insert mode* as like Vim (`i`, `a`, etc.)
 
