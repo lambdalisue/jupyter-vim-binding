@@ -124,11 +124,11 @@ If you would like to customize the design, create a your `custom.css` at `~/.jup
 ```css
 /* Jupyter cell is in normal mode when code mirror */
 .edit_mode .cell.selected .CodeMirror-focused.cm-fat-cursor {
-  background-color: #F5F6EB;
+  background-color: #F5F6EB !important;
 }
 /* Jupyter cell is in insert mode when code mirror */
 .edit_mode .cell.selected .CodeMirror-focused:not(.cm-fat-cursor) {
-  background-color: #F6EBF1;
+  background-color: #F6EBF1 !important;
 }
 ```
 
