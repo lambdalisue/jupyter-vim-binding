@@ -84,6 +84,10 @@ define([
         ));
       }
     });
+
+    for(var i=0; i<this.on_ready_callbacks.length; i++) {
+      this.on_ready_callbacks[i](this);
+    }
   };
 
   exports.detach = function detach() {
@@ -95,6 +99,9 @@ define([
   exports.load_ipython_extension = function load_ipython_extension() {
     conf.load();
   };
+
+  // Assumed to used in 'custom.js'
+  exports.on_ready_callbacks = [];
 
   return exports;
 });
