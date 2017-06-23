@@ -3,4 +3,4 @@ Name: VIM binding
 Description: Adds VIM keyboard binding for Jupyter notebooks.
 Link: README.md
 Main: vim_binding.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
