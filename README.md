@@ -1,6 +1,6 @@
 jupyter-vim-binding
 ===============================================================================
-![Version 2.0.5](https://img.shields.io/badge/version-2.0.5-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
+![Version 2.0.6](https://img.shields.io/badge/version-2.0.6-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
 Do you use Vim? And you need to use [Jupyter Notebook]?
 This is a [Jupyter Notebook][] (formerly known as [IPython Notebook][]) extension to enable Vim like environment powered by [CodeMirror's Vim][].
