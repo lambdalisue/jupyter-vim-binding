@@ -169,6 +169,19 @@ Because of this policy, users have no chance to use default key mappings of jupy
 - http://stackoverflow.com/questions/15911785/overriding-shortcut-keys-in-firefox-and-chrome
 - https://github.com/liftoff/GateOne/issues/290
 
+### Vivaldi
+
+The chromium-based [Vivaldi][vivaldi] browser provides more flexibility in key mapping customizations and might be a viable alternative to Google Chrome for power users.
+In contrast to Google Chrome or Chromium, (almost) all keyboard shortcuts in Vivaldi can be [changed or disabled][vivaldi-keyboard], including (but not limited to) `Ctrl-N`, `Ctrl-T`, `Ctrl-J`, etc.
+
+Furthermore, Vivaldi allows assigning a keyboard shortcut to temporarily [disable all other browser keyboard shortcuts][vivaldi-disable], making all key mappings available for other uses.
+Note that this temporary change applies globally to *all* tabs and windows of the browser instance (or "Profile") under consideration. To confine it to a subset of tabs, use a separate profile via [the `--user-data-dir=...` option][user-data-dir].
+
+[vivaldi]: https://vivaldi.com/
+[vivaldi-keyboard]: https://vivalditips.com/customization/shortcuts/en
+[vivaldi-disable]: https://www.ghacks.net/2017/02/07/vivaldi-tip-block-all-keyboard-shortcuts/
+[user-data-dir]: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
+
 ### Clipboard
 
 Most of modern browsers prohibit javascript to access a system clipboard without user action such as clicking a button.
