@@ -1,6 +1,6 @@
 jupyter-vim-binding
 ===============================================================================
-![Version 2.0.6](https://img.shields.io/badge/version-2.0.6-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
+![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
 Do you use Vim? And you need to use [Jupyter Notebook]?
 This is a [Jupyter Notebook][] (formerly known as [IPython Notebook][]) extension to enable Vim like environment powered by [CodeMirror's Vim][].
@@ -22,6 +22,16 @@ For example
 - Jupyter provides `C` (`Shift-c`) and `V` (`Shift-v`) to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste cells
 - Jupyter provides `<C-s>` (`Ctrl-s`) to save a checkpoint but this extension eliminate that mapping while `:w` works same
 - A lot more.
+
+
+Need contributors
+-------------------------------------------------------------------------------
+
+While I changed my job, I don't use jupyter notebook and I can't make enough time to maintain this plugin.
+
+**So if you like this plugin, please consider to be a contributor.**
+
+https://github.com/lambdalisue/jupyter-vim-binding/issues/89
 
 
 Installation
