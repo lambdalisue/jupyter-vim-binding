@@ -52,7 +52,7 @@ Key mappings are designed for Vimmer so probably you don't need to know much abo
 
 - All mappings are shown by hitting `<F1>`
 - Enter *Vim mode*; a super mode of *Vim command mode* and *Insert mode*; by 1) Double clicking a cell, 2) Hit `<Enter>` on a cell, or 3) Hit `i` on a cell
-- Leave *Vim mode* and re-enter *Jupyter mode* by hitting `<S-Esc>` (`Shift-Escape`), uncomfortable mapping on purpose
+- Leave *Vim mode* and re-enter *Jupyter mode* by `:q` or `<S-Esc>` (`Shift-Escape`)
 - Enter *Insert mode* or leave *Insert mode* as like Vim (`i`, `a`, etc.)
 
 You can find detail information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
