@@ -41,12 +41,7 @@ There are several ways to install the extension, see [Installation](https://gith
 The procedure below is a most simple one for quick use (**A recommended way is different from this. See the link above if you are beginner.**)
 
 ```bash
-# Create required directory in case (optional)
-mkdir -p $(jupyter --data-dir)/nbextensions
-# Clone the repository
-cd $(jupyter --data-dir)/nbextensions
-git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
-# Activate the extension
+jupyter nbextension install --user https://github.com/lambdalisue/jupyter-vim-binding/archive/master.zip
 jupyter nbextension enable vim_binding/vim_binding
 ```
 
