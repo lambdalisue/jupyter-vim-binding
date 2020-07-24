@@ -15,21 +15,21 @@ I'm sure that this plugin helps to improve your QOL.
   <img src="resource/screencast.gif" alt="Screencast">
 </div>
 
-This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce a new behaviors.
+This extension stands for providing a Vim like environment, so it would drastically overwrite the default mappings and introduce new behaviors.
 For example
 
 - Jupyter has two modes, *Command mode* and *Edit mode* but this extension has three modes, *Jupyter mode*, *Vim command mode*, and *Insert mode*
-- Jupyter provides `C` (`Shift-c`) and `V` (`Shift-v`) to perform copy and paste cells but this extension provides `yy` and `p` to perform copy and paste cells
-- Jupyter provides `<C-s>` (`Ctrl-s`) to save a checkpoint but this extension eliminate that mapping while `:w` works same
+- Jupyter provides `C` (`Shift-c`) and `V` (`Shift-v`) to perform copy and paste cells, but this extension provides `yy` and `p` to perform copy and paste cells
+- Jupyter provides `<C-s>` (`Ctrl-s`) to save a checkpoint, but this extension eliminates that mapping while `:w` works same
 - A lot more.
 
 
 Need contributors
 -------------------------------------------------------------------------------
 
-While I changed my job, I don't use jupyter notebook and I can't make enough time to maintain this plugin.
+While I changed my job, I don't use jupyter notebook, and I can't make enough time to maintain this plugin.
 
-**So if you like this plugin, please consider to be a contributor.**
+**So if you like this plugin, please consider being a contributor.**
 
 https://github.com/lambdalisue/jupyter-vim-binding/issues/89
 
@@ -38,7 +38,7 @@ Installation
 -------------------------------------------------------------------------------
 
 There are several ways to install the extension, see [Installation](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Installation) for detail.
-The procedure below is a most simple one for quick use (**A recommended way is different from this. See the link above if you are beginner.**)
+The procedure below is the most simple one for quick use (**A recommended way is different from this. See the link above if you are a beginner.**)
 
 ```bash
 # Create required directory in case (optional)
@@ -55,8 +55,8 @@ Usage
 -------------------------------------------------------------------------------
 
 This extension provides *Jupyter mode* (For manipulating Jupyter) and *Vim mode* (For manipulating text).
-In *Vim mode*, there are *Command mode* and *Insert mode* like native Vim.
-Users can distinguish these mode by background color of the cell.
+In *Vim mode*, there is *Command mode* and *Insert mode* like native Vim.
+Users can distinguish these modes by the background color of the cell.
 
 Key mappings are designed for Vimmer so probably you don't need to know much about the mapping but remember the followings to survive:
 
@@ -65,7 +65,7 @@ Key mappings are designed for Vimmer so probably you don't need to know much abo
 - Leave *Vim mode* and re-enter *Jupyter mode* by `:q` or `<S-Esc>` (`Shift-Escape`)
 - Enter *Insert mode* or leave *Insert mode* as like Vim (`i`, `a`, etc.)
 
-You can find detail information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
+You can find detailed information about the mappings or concept in [Concept](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Concept) page.
 
 
 Completion and Tooltip
@@ -74,7 +74,7 @@ Completion and Tooltip
 jupyter-vim-binding supports `<C-n>`/`<C-p>` completion and `<C-g>` tooltip in a code cell (not in markdown / raw cell).
 These mappings are not listed in a help panel, due to a technical limitation.
 
-When user hit `<C-n>` or `<C-p>`, a completion panel like below will be shown.
+When the user hits `<C-n>` or `<C-p>`, a completion panel like below will be shown.
 Once the completion panel is shown, users can select a candidate by `<C-n>`/`<C-p>` and apply by `<Enter>` or cancel by `<Esc>`.
 
 ![Completion](resource/completion.png)
@@ -84,7 +84,7 @@ The tooltip will disappear when users perform some actions like hitting a key.
 
 ![Tooltip](resource/tooltip.png)
 
-Note that you can repeat `<C-g>` to make the tooltip larger (more informations).
+Note that you can repeat `<C-g>` to make the tooltip larger (more information).
 
 
 Plug mappings
@@ -101,7 +101,7 @@ jupyter-vim-binding provides the following `<Plug>` mappings for CodeMirror.
 - `<Plug>(vim-binding-_)` : `_` which move to the next cell at the cell side
 
 While CodeMirror's Vim does not provide `noremap` type of mappings.
-You need to use these `<Plug>` mappings to prevent infinity loop (See samples in Customization section).
+You need to use these `<Plug>` mappings to prevent an infinite loop (See samples in Customization section).
 
 
 Customization
@@ -167,13 +167,13 @@ See [Customization](https://github.com/lambdalisue/jupyter-vim-binding/wiki/Cust
 Limitation
 -------------------------------------------------------------------------------
 
-jupyter-vim-binding has following technical limitation.
-If anybody know about a confirmed workaround for these limitations, let me know.
+jupyter-vim-binding has the following technical limitation.
+If anybody knows about a confirmed workaround for these limitations, let me know.
 
 ### Google Chrome
 
-Google Chrome prohibits javascript to override several key mappings such as `Ctrl-N`, `Ctrl-T`, etc.
-Because of this policy, users have no chance to use default key mappings of jupyter-vim-binding such as `<C-n>` completion.
+Google Chrome prohibits javascript from overriding several key mappings such as `Ctrl-N`, `Ctrl-T`, etc.
+Because of this policy, users have no chance to use default key mappings of jupyter-vim-binding, such as `<C-n>` completion.
 
 - https://code.google.com/p/chromium/issues/detail?id=33056
 - http://stackoverflow.com/questions/15911785/overriding-shortcut-keys-in-firefox-and-chrome
@@ -194,17 +194,17 @@ Note that this temporary change applies globally to *all* tabs and windows of th
 
 ### Clipboard
 
-Most of modern browsers prohibit javascript to access a system clipboard without user action such as clicking a button.
-Because of this, there is no chance to enable copy and paste through `yy`, `dd`, or `p` while HTML5 clipboard object cannot be retrieved in a `keydown` event or so on.
+Most modern browsers prohibit javascript from accessing a system clipboard without user action, such as clicking a button.
+Because of this, there is no chance to enable copy and paste through `yy`, `dd`, or `p` while HTML5 clipboard object cannot be retrieved in a `keydown` event.
 So Users need to use browser default mappings such as `Ctrl-C`, `Ctrl-V` if they want to copy and paste through a system clipboard.
 
-The followings are clipboard library for javascript but all of them require `click` event or no paste support.
+The followings are clipboard library for javascript, but all of them require `click` event or no paste support.
 
 - https://github.com/zeroclipboard/zeroclipboard
 - https://clipboardjs.com/
 
-What we need is a `clipboard` object which can used for copy and paste in a `keydown` event rather than `click` event.
-However, I don't know any workaround for this so it is impossible to perform copy and paste in `yy` or `p` for now.
+What we need is a `clipboard` object which can be used for copy and paste in a `keydown` event rather than `click` event.
+However, I don't know any workaround for this, so it is impossible to perform copy and paste in `yy` or `p` for now.
 
 
 License
