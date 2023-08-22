@@ -2,6 +2,12 @@ jupyter-vim-binding
 ===============================================================================
 ![Version 2.1.0](https://img.shields.io/badge/version-2.1.0-yellow.svg?style=flat-square) ![Support Jupyter 4.1 or above](https://img.shields.io/badge/support-Jupyter%204.1%20or%20above-yellowgreen.svg?style=flat-square) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE) ![Doc](https://img.shields.io/badge/doc-%3Ah%20Press%20F1%20on%20Jupyter-orange.svg?style=flat-square)
 
+---
+
+**See https://github.com/jupyterlab-contrib/jupyterlab-vim for an alternative of this plugin.**
+
+---
+
 Do you use Vim? And you need to use [Jupyter Notebook]?
 This is a [Jupyter Notebook][] (formerly known as [IPython Notebook][]) extension to enable Vim like environment powered by [CodeMirror's Vim][].
 I'm sure that this plugin helps to improve your QOL.
